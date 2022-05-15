@@ -1,0 +1,37 @@
+.header {
+  width: 100%;
+  max-width: 880px;
+  min-height: 84px; /* В чем преимущество управления высотой через паддинги? */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #545454;
+  background-color: chartreuse;
+}
+
+.header-logo__link {
+  opacity: 1;
+  transition: opacity .2s linear;
+  font-size: 0;
+}
+
+.header-logo__link:hover {
+  opacity: .7;
+}
+
+.header-logo__img {
+  width: 103.74px;
+  height: auto;
+}
+
+.header__buttons-wrapper {
+
+}
+
+.header__signup-link {
+
+}
+
+.header__signin-link {
+
+}

@@ -1,12 +1,10 @@
 
 import logo from '../../images/logo.svg';
-import Navigation from '../Navigation/Navigation';
-import { Link, useLocation } from 'react-router-dom';
+import Navigation from '../Navigation/Navigation.js';
+import { Link } from 'react-router-dom';
 import './Header.css';
 
 function Header (props) {
-
-  let location = useLocation();
 
   return (
     <header className="header">
@@ -14,17 +12,16 @@ function Header (props) {
         <img className="header-logo__img" src={logo} alt="Логотип: буква С в кружочке"/>
       </Link>
       {
-        location.pathname === "/" ?
+        props.loggedIn ?
         (
-          <div>
-            <Link className="header__signup-link" to="/sign-up">Регистрация</Link>
-            <Link className="header__signin-link" to="/sign-in">Войти</Link>
-          </div>
-
+          <Navigation />
         )
         :
         (
-          <Navigation />
+          <div className="header__buttons-wrapper">
+            <Link className="header__signup-link" to="/sign-up">Регистрация</Link>
+            <Link className="header__signin-link" to="/sign-in">Войти</Link>
+          </div>
         )
       }
     </header>
