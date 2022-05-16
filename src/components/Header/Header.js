@@ -18,10 +18,12 @@ function Header (props) {
         )
         :
         (
-          <div className="header__buttons-wrapper">
+          <nav className="header__auth-menu">
             <Link className="header__signup-link" to="/sign-up">Регистрация</Link>
-            <Link className="header__signin-link" to="/sign-in">Войти</Link>
-          </div>
+            <Link className="header__signin-link" to="/sign-in">
+              <button className="header__signin-btn">Войти</button>
+            </Link>
+          </nav>
         )
       }
     </header>

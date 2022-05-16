@@ -1,12 +1,11 @@
 .header {
   width: 100%;
-  max-width: 880px;
-  min-height: 84px; /* В чем преимущество управления высотой через паддинги? */
+  max-width: 1200px;
+  /* min-height: 84px; */
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid #545454;
-  background-color: chartreuse;
+  padding: 21px 70px;
 }
 
 .header-logo__link {
@@ -20,18 +19,79 @@
 }
 
 .header-logo__img {
-  width: 103.74px;
+  width: 38px;
   height: auto;
 }
 
-.header__buttons-wrapper {
-
+.header__auth-menu {
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .header__signup-link {
+  text-decoration: none;
+  opacity: 1;
+  transition: opacity .2s linear;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 16px;
+  color: #000000;
+  margin: 0;
+}
 
+.header__signup-link:hover {
+  opacity: .7;
+}
+
+.header__signup-link:focus {
+  outline: none;
+}
+
+.popup__link:active {
+  border: none;
+}
+
+.header__signup-link:disabled {
+  opacity: .2;
+  cursor: default;
 }
 
 .header__signin-link {
 
+}
+
+.header__signin-btn {
+  background: #2BE080;
+  border-radius: 3px;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 16px;
+  padding: 8px 20px;
+  text-decoration: none;
+  opacity: 1;
+  transition: opacity .2s linear;
+  cursor: pointer;
+  border: none;
+  margin: 0;
+}
+
+.header__signin-btn:hover {
+  opacity: .7;
+}
+
+.header__signin-btn:focus {
+  outline: none;
+}
+
+.header__signin-btn:active {
+  border: none;
+}
+
+.header__signin-btn:disabled {
+  opacity: .2;
+  cursor: default;
 }

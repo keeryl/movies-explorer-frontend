@@ -6,11 +6,13 @@ function Navigation (props) {
 
   return (
     <nav className="navigation">
-      <Link className="navigation__link" to="/movies">Фильмы</Link>
-      <Link className="navigation__link" to="/saved-movies">Сохранённые фильмы</Link>
+      <div className="navigation__wrapper">
+        <Link className="navigation__link" to="/movies">Фильмы</Link>
+        <Link className="navigation__link" to="/saved-movies">Сохранённые фильмы</Link>
+      </div>
       <Link className="navigation__account-link" to="/profile">
-        <span className="navigation__account-text">Аккаунт</span>
-        <img className="navigation__icon" src={accountIcon} alt="Иконка аккаунта"/>
+        Аккаунт
+        <div className="navigation__icon"></div>
       </Link>
     </nav>
   )
