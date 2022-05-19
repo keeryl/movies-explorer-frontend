@@ -2,6 +2,7 @@ import './App.css';
 import React from 'react';
 // import { Route, withRouter, Switch, useHistory } from 'react-router-dom';
 import Header from '../Header/Header.js';
+import Main from '../Main/Main';
 
 function App() {
 
@@ -10,6 +11,7 @@ function App() {
   return (
     <div className="App">
       <Header loggedIn={loggedIn}/>
+      <Main />
       {/* <Footer /> */}
     </div>
   );
