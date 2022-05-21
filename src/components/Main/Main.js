@@ -1,6 +1,7 @@
 import './Main.css';
 import Promo from '../Promo/Promo';
 import AboutProject from '../AboutProject/AboutProject';
+import Techs from '../Techs/Techs';
 
 function Main (props) {
 
@@ -8,6 +9,7 @@ function Main (props) {
     <main className="main">
       <Promo />
       <AboutProject />
+      <Techs />
     </main>
   );
 }
