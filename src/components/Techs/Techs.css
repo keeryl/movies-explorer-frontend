@@ -1,11 +1,16 @@
 .techs {
-  background-color: #F5F5F5;
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
-  padding: 100px 70px;
+}
+
+.techs__wrapper {
+  width: 100%;
+  max-width: 1280px;
+  min-width: 320px;
   box-sizing: border-box;
+  padding: 100px 70px;
 }
 
 .techs__header {

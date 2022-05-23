@@ -3,6 +3,7 @@ import React from 'react';
 // import { Route, withRouter, Switch, useHistory } from 'react-router-dom';
 import Header from '../Header/Header.js';
 import Main from '../Main/Main';
+import Footer from '../Footer/Footer';
 
 function App() {
 
@@ -12,7 +13,7 @@ function App() {
     <div className="App">
       <Header loggedIn={loggedIn}/>
       <Main />
-      {/* <Footer /> */}
+      <Footer />
     </div>
   );
 }
