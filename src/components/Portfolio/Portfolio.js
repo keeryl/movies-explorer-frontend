@@ -10,13 +10,43 @@ function Portfolio () {
           <li>
             <a
               className="portfolio__link"
-              href="https://"
+              href="https://github.com/keeryl/how-to-learn"
               target="_blank"
               rel="noreferrer">
-                <button className="portfolio__btn">
+                <span>
                   Статичный сайт
-                  <div className="portfolio__btn-icon"></div>
-                </button>
+                </span>
+                <span>
+                  &#8599;
+                </span>
+            </a>
+          </li>
+          <li>
+            <a
+              className="portfolio__link"
+              href="https://github.com/keeryl/russian-travel"
+              target="_blank"
+              rel="noreferrer">
+                <span>
+                  Адаптивный сайт
+                </span>
+                <span>
+                  &#8599;
+                </span>
+            </a>
+          </li>
+          <li>
+            <a
+              className="portfolio__link portfolio__link_last-link"
+              href="https://keeryl-mesto.nomoredomains.work"
+              target="_blank"
+              rel="noreferrer">
+                <span>
+                  Одностраничное приложение
+                </span>
+                <span>
+                  &#8599;
+                </span>
             </a>
           </li>
         </ul>

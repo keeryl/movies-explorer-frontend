@@ -9,7 +9,7 @@
 .about-me__wrapper {
   max-width: 1280px;
   min-width: 320px;
-  padding: 100px 70px;
+  padding: 80px 70px 50px 70px;
   box-sizing: border-box;
   width: 100%;
 }
@@ -87,7 +87,7 @@
 }
 
 .about-me__link:hover {
-  opacity: .7;
+  opacity: .5;
 }
 
 .about-me__link:focus {

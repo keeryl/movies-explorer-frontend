@@ -9,7 +9,7 @@
 .portfolio__wrapper {
   max-width: 1280px;
   min-width: 320px;
-  padding: 100px 70px;
+  padding: 50px 70px;
   box-sizing: border-box;
   width: 100%;
 }
@@ -32,7 +32,10 @@
 }
 
 .portfolio__link {
+  display: flex;
+  justify-content: space-between;
   margin: 0;
+  padding: 20px 0;
   font-weight: 400;
   font-size: 30px;
   line-height: 50px;
@@ -45,7 +48,7 @@
 }
 
 .portfolio__link:hover {
-  opacity: .7;
+  opacity: .5;
 }
 
 .portfolio__link:focus {
@@ -61,10 +64,6 @@
   cursor: default;
 }
 
-.portfolio__btn {
-
-}
-
-.portfolio__btn-icon {
-
+.portfolio__link_last-link {
+  border: none;
 }

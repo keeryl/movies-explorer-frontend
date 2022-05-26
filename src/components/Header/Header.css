@@ -24,7 +24,7 @@
 }
 
 .header-logo__link:hover {
-  opacity: .7;
+  opacity: .5;
 }
 
 .header-logo__img {
@@ -53,7 +53,7 @@
 }
 
 .header__signup-link:hover {
-  opacity: .7;
+  opacity: .5;
 }
 
 .header__signup-link:focus {
@@ -89,7 +89,7 @@
 }
 
 .header__signin-btn:hover {
-  opacity: .7;
+  opacity: .5;
 }
 
 .header__signin-btn:focus {
