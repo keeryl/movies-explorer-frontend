@@ -29,6 +29,7 @@
   width: 100%;
   display: grid;
   grid-template-columns: 1fr 1fr;
+  gap: 30px;
 }
 
 .about-project__item {
@@ -116,4 +117,14 @@
 .graphics-text_color-grey {
   color: #A0A0A0;
   font-weight: 500;
+}
+
+@media screen and (max-width: 768px) {
+  .about-project__wrapper {
+    padding: 80px 50px;
+  }
+  .about-project__item-text {
+    font-size: 12px;
+    line-height: 18px;
+  }
 }

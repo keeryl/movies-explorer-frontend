@@ -67,3 +67,13 @@
 .portfolio__link_last-link {
   border: none;
 }
+
+@media screen and (max-width: 768px) {
+  .portfolio__wrapper {
+    padding: 50px;
+  }
+
+  .portfolio__link {
+    font-size: 28px;
+  }
+}
