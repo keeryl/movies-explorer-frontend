@@ -120,11 +120,40 @@
 }
 
 @media screen and (max-width: 768px) {
+
   .about-project__wrapper {
     padding: 80px 50px;
   }
+
   .about-project__item-text {
     font-size: 12px;
     line-height: 18px;
   }
+}
+
+@media screen and (max-width: 640px) {
+
+  .about-project__wrapper {
+    padding: 60px 18px;
+  }
+
+  .about-project__items {
+    grid-template-columns: 1fr;
+  }
+
+  .about-project__item-title {
+    font-size: 18px;
+    line-height: 22px;
+  }
+
+  .about-project__item-text {
+    font-size: 11px;
+    line-height: 16px;
+  }
+
+  .graphics-text {
+    font-size: 11px;
+    line-height: 13px;
+  }
+
 }

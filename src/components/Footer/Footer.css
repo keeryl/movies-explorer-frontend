@@ -81,3 +81,14 @@
   opacity: .2;
   cursor: default;
 }
+
+@media screen and (max-width: 540px) {
+  .footer__second-line {
+    flex-direction: column-reverse;
+    gap: 30px;
+  }
+
+  .footer__links {
+    flex-direction: column;
+  }
+}
