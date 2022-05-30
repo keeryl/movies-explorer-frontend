@@ -83,6 +83,16 @@
 }
 
 @media screen and (max-width: 540px) {
+
+  .footer__wrapper {
+    padding: 80px 10px 10px 10px;
+  }
+
+  .footer__first-line {
+    font-size: 12px;
+    line-height: 50px;
+  }
+
   .footer__second-line {
     flex-direction: column-reverse;
     gap: 30px;
@@ -90,5 +100,12 @@
 
   .footer__links {
     flex-direction: column;
+    gap: 7px;
+  }
+
+  .footer__link {
+    font-size: 12px;
+    line-height: 15px;
   }
 }
+

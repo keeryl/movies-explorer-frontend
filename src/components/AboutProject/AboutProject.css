@@ -137,6 +137,11 @@
     padding: 60px 18px;
   }
 
+  .about-project__header {
+    font-size: 18px;
+    line-height: 60px;
+  }
+
   .about-project__items {
     grid-template-columns: 1fr;
   }

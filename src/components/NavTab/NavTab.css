@@ -39,3 +39,12 @@
   opacity: .2;
   cursor: default;
 }
+
+@media screen and (max-width: 540px) {
+
+  .navtab__link {
+    width: 82px;
+    font-size: 10px;
+  }
+
+}
