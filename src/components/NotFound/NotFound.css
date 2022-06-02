@@ -1,0 +1,53 @@
+.not-found {
+  width: 100%;
+  height: 100vh;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.not-found__error-number {
+  font-weight: 400;
+  font-size: 140px;
+  line-height: 169px;
+  margin: 0;
+}
+
+.not-found__error-text {
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 19px;
+  margin: 0;
+}
+
+.not-found__link {
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 17px;
+  color: #3456F3;
+  text-decoration: none;
+  opacity: 1;
+  transition: opacity .2s linear;
+  cursor: pointer;
+  margin: 0;
+  padding-top: 184px;
+}
+
+.not-found__link:hover {
+  opacity: .5;
+}
+
+.not-found__link:focus {
+  outline: none;
+}
+
+.not-found__link:active{
+  opacity: .2;
+  cursor: default;
+}
+
+@media screen and (max-width: 768px) {
+
+}

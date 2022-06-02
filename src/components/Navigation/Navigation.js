@@ -1,5 +1,5 @@
 import './Navigation.css';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import React from 'react';
 
 function Navigation (props) {
@@ -26,13 +26,26 @@ function Navigation (props) {
       </Link>
       <button className="navigation__humburger-btn" onClick={openMenu}></button>
       <div className={`navigation__popup ${isOpened ? "navigation__popup_opened" : ""}`}>
-        <ul className="navigation__side-menu">
+        <div className="navigation__side-menu">
           <button className="navigation__side-menu-close-btn" onClick={closeMenu}>Х</button>
-          <li>Главная</li>
-          <li>Фильмы</li>
-          <li>Сохранённые фильмы</li>
-          <li>Аккаунт</li>
-        </ul>
+          <div className="navigation__side-menu-content-wrapper">
+            <ul className="navigation__side-menu-links">
+              <li>
+                <NavLink className="navigation__side-menu-link" to="/">Главная</NavLink>
+              </li>
+              <li>
+                <NavLink className="navigation__side-menu-link" to="/movies">Фильмы</NavLink>
+              </li>
+              <li>
+                <NavLink className="navigation__side-menu-link" to="/saved-movies">Сохранённые фильмы</NavLink>
+              </li>
+            </ul>
+            <Link className="navigation__side-menu-account-link" to="/profile">
+              Аккаунт
+              <div className="navigation__icon"></div>
+            </Link>
+          </div>
+        </div>
       </div>
     </nav>
   )
