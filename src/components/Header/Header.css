@@ -17,21 +17,6 @@
   padding: 20px 70px;
 }
 
-.header-logo__link {
-  opacity: 1;
-  transition: opacity .2s linear;
-  font-size: 0;
-}
-
-.header-logo__link:hover {
-  opacity: .5;
-}
-
-.header-logo__img {
-  width: 38px;
-  height: auto;
-}
-
 .header__auth-menu {
   display: flex;
   flex-direction: row;

@@ -1,17 +1,14 @@
-
-import logo from '../../images/logo.svg';
+import './Header.css';
+import Logo from '../Logo/Logo';
 import Navigation from '../Navigation/Navigation.js';
 import { Link } from 'react-router-dom';
-import './Header.css';
 
 function Header (props) {
 
   return (
     <header className="header">
       <div className="header__wrapper">
-        <Link className="header-logo__link" to="/" target="_self">
-          <img className="header-logo__img" src={logo} alt="Логотип: буква С в кружочке"/>
-        </Link>
+        <Logo />
         {
           props.loggedIn ?
           (
