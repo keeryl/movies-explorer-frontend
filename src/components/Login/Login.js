@@ -23,24 +23,24 @@ function Login () {
 
   return (
     <main className="login">
-      <form className="login-form" onSubmit={handleSubmit}>
+      <form className="login__form" onSubmit={handleSubmit}>
         <Logo />
         <h2 className="login__header">Рады видеть!</h2>
-        <fieldset className="login-form__inputs">
+        <fieldset className="login__form-inputs">
+          <lable className="login__input-lable">E-mail</lable>
           <input
             type="email"
-            className="login-form__input"
+            className="login__form-input"
             onChange={handleEmailChange}
             value={email}
-            placeholder="Email"
           >
           </input>
+          <lable className="login__input-lable">Пароль</lable>
           <input
             type="password"
-            className="login-form__input"
+            className="login__form-input"
             onChange={handlePasswordChange}
             value={password}
-            placeholder="Пароль"
           >
           </input>
         </fieldset>
@@ -50,7 +50,7 @@ function Login () {
         >
           Войти
         </button>
-        <p className="login__text">Еще не зерегистрированы? <Link className="login__link" to="/">Регистрация</Link></p>
+        <p className="login__text">Еще не зерегистрированы? <Link className="login__link" to="/signup">Регистрация</Link></p>
       </form>
     </main>
   );

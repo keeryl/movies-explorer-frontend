@@ -17,8 +17,8 @@ function Header (props) {
           :
           (
             <nav className="header__auth-menu">
-              <Link className="header__signup-link" to="/sign-up">Регистрация</Link>
-              <Link className="header__signin-link" to="/sign-in">
+              <Link className="header__signup-link" to="/signup">Регистрация</Link>
+              <Link className="header__signin-link" to="/signin">
                 <button className="header__signin-btn">Войти</button>
               </Link>
             </nav>
