@@ -8,6 +8,7 @@ import NotFound from '../NotFound/NotFound';
 import Login from '../Login/Login';
 import Register from '../Register/Register';
 import Profile from '../Profile/Profile';
+import Movies from '../Movies/Movies';
 
 function App() {
 
@@ -22,8 +23,8 @@ function App() {
         <Route path="/signin" element={<Login />} />
         <Route path="/signup" element={<Register />} />
         <Route path="/profile" element={<Profile />} />
-        {/* <Route path="/movies" element={<Movies />} />
-        <Route path="/saved-movies" element={<SavedMovies />} /> */}
+        <Route path="/movies" element={<Movies />} />
+        {/* <Route path="/saved-movies" element={<SavedMovies />} /> */}
       </Routes>
       {/* <Footer /> */}
     </div>

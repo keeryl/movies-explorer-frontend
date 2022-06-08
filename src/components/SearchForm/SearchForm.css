@@ -1,0 +1,124 @@
+.search-form {
+  width: 100%;
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  background: #F9F9F9;
+  border-radius: 9px;
+  box-sizing: border-box;
+}
+
+.search-form__search-field {
+  width: 100%;
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  padding: 0;
+  border: 0;
+  padding: 20px 30px;
+  margin: 0;
+  gap: 16px;
+  box-sizing: border-box;
+  background: #F9F9F9;
+  border-radius: 9px;
+}
+
+.search-form__input-lable {
+  width: 22px;
+  height: 22px;
+  background-image: url(../../images/search_icon_grey.svg);
+  background-repeat: no-repeat;
+  background-position: center center;
+  border: none;
+  align-self: center;
+}
+
+.search-form__input {
+  width: 80%;
+  border: 0;
+  background: inherit;
+  padding: 0;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 20px;
+}
+
+.search-form__input::placeholder {
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 20px;
+  color: #A0A0A0;
+}
+
+.search-form__input:focus {
+  outline: none;
+}
+
+.search-form__button {
+  background-color: #3456F3;
+  border-radius: 48px;
+  width: 80px;
+  height: 34px;
+  background-image: url(../../images/search_icon_white.svg);
+  background-repeat: no-repeat;
+  background-position: center center;
+  border: none;
+  padding: 0;
+  margin: 0;
+  outline: none;
+  cursor: pointer;
+  opacity: 1;
+  transition: opacity .2s linear;
+}
+
+.search-form__button:hover {
+  opacity: .7;
+}
+
+.search-form__button:focus {
+  outline: none;
+}
+
+.search-form__button:active {
+  border: none;
+}
+
+.search-form__checkbox-field {
+  border: 0;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  box-sizing: border-box;
+  padding: 20px 30px;
+  border-left: 1px solid #E8E8E8;
+  margin: 0;
+  background: #F9F9F9;
+  border-radius: 9px;
+}
+
+.search-form__checkbox {
+  width: 34px;
+  height: 14px;
+  background: #2BE080;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  box-sizing: border-box;
+  padding: 2px;
+  cursor: pointer;
+}
+
+.search-form__checkbox-circle {
+  width: 10px;
+  height: 10px;
+  background: #fff;
+  border-radius: 5px;
+}
+
+.search-form__checkbox-text {
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 18px;
+  margin: 0;
+}
