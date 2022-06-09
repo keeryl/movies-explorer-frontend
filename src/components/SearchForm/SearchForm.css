@@ -1,11 +1,12 @@
 .search-form {
   width: 100%;
   display: flex;
-  align-items: stretch;
+  align-items: center;
   justify-content: space-between;
   background: #F9F9F9;
   border-radius: 9px;
   box-sizing: border-box;
+  padding: 20px 0;
 }
 
 .search-form__search-field {
@@ -15,16 +16,16 @@
   justify-content: space-between;
   padding: 0;
   border: 0;
-  padding: 20px 30px;
   margin: 0;
   gap: 16px;
   box-sizing: border-box;
   background: #F9F9F9;
-  border-radius: 9px;
+  border-right: 1px solid #E8E8E8;
+  padding: 0 30px;
 }
 
 .search-form__input-lable {
-  width: 22px;
+  min-width: 22px;
   height: 22px;
   background-image: url(../../images/search_icon_grey.svg);
   background-repeat: no-repeat;
@@ -34,7 +35,7 @@
 }
 
 .search-form__input {
-  width: 80%;
+  width: 100%;
   border: 0;
   background: inherit;
   padding: 0;
@@ -57,7 +58,7 @@
 .search-form__button {
   background-color: #3456F3;
   border-radius: 48px;
-  width: 80px;
+  min-width: 80px;
   height: 34px;
   background-image: url(../../images/search_icon_white.svg);
   background-repeat: no-repeat;
@@ -89,8 +90,7 @@
   align-items: center;
   gap: 15px;
   box-sizing: border-box;
-  padding: 20px 30px;
-  border-left: 1px solid #E8E8E8;
+  padding: 0 30px;
   margin: 0;
   background: #F9F9F9;
   border-radius: 9px;
@@ -121,4 +121,57 @@
   font-size: 13px;
   line-height: 18px;
   margin: 0;
+}
+
+@media screen and (max-width: 768px) {
+
+  .search-form__search-field {
+    padding: 0 20px;
+  }
+
+  .search-form__checkbox-field {
+    padding: 0 20px;
+  }
+
+}
+
+@media screen and (max-width: 700px) {
+
+  .search-form {
+    flex-direction: column;
+    align-items: center;
+    background: #fff;
+    padding: 0;
+    gap: 46px;
+  }
+
+  .search-form__search-field {
+    border-right: none;
+    padding: 20px;
+    background: #F9F9F9;
+    border-radius: 9px;
+    gap: 5px;
+  }
+
+  .search-form__checkbox-field {
+    background: #fff;
+    border-radius: 0;
+  }
+
+  .search-form__input-lable {
+    display: none;
+  }
+
+  .search-form__input {
+    font-size: 14px;
+  }
+
+  .search-form__input::placeholder {
+    font-size: 14px;
+  }
+
+  .search-form__checkbox-text {
+    font-size: 11px;
+  }
+
 }
