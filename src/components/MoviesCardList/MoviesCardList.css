@@ -3,7 +3,12 @@
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fit, 270px);
-  justify-content: center;
-  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(270px, max-content));
+  grid-template-rows: auto;
+  justify-content: stretch;
+  align-content: start;
+  justify-items: stretch;
+  align-items: stretch;
+  column-gap: 20px;
+  row-gap: 38px;
 }

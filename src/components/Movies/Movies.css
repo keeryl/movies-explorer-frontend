@@ -22,7 +22,8 @@
 .movies__items {
   width: calc(100% - 140px);
   max-width: 1140px;
-  padding: 70px;
+  padding: 70px 0;
+  box-sizing: border-box;
 }
 
 @media screen and (max-width: 768px) {
