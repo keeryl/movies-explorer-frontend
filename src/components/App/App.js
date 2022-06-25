@@ -26,7 +26,7 @@ function App() {
         <Route path="/movies" element={<Movies />} />
         {/* <Route path="/saved-movies" element={<SavedMovies />} /> */}
       </Routes>
-      {/* <Footer /> */}
+      <Footer />
     </div>
   );
 }

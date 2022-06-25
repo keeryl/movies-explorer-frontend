@@ -13,6 +13,9 @@ function Movies () {
       <section className="movies__items">
         <MoviesCardList />
       </section>
+      <section className="movies__btn-section">
+        <button className="movies__load-btn">Ещё</button>
+      </section>
     </main>
   );
 }
