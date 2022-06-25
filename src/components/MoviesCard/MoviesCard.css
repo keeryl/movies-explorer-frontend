@@ -56,6 +56,10 @@
   cursor: pointer;
 }
 
+.movies-card__like-button_liked {
+  background-image: url('../../images/heart_icon_red.svg');
+}
+
 .movies-card__duration {
   font-weight: 400;
   font-size: 11px;
