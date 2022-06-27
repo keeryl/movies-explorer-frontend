@@ -17,7 +17,7 @@ function MoviesCardList () {
 
       <MoviesCard
         url="https://api.nomoreparties.co/uploads/images_244e1fd56f.jpeg"
-        title="Просто какое-то длинное название фильма я не знаю какое"
+        title="Просто какое-то длинное название фильма я не знаю какое, но оно очень длинное"
       />
 
       <MoviesCard
