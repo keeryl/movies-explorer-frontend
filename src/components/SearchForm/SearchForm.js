@@ -12,7 +12,7 @@ function SearchForm () {
   return(
     <form className="search-form">
       <fieldset className="search-form__search-field">
-        <lable className="search-form__input-lable"></lable>
+        <label className="search-form__input-lable"></label>
         <input className="search-form__input" placeholder="Фильм"></input>
         <button className="search-form__button"></button>
       </fieldset>

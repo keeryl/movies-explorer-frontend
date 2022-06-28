@@ -111,13 +111,12 @@
 
 .search-form__checkbox_checked {
   background-color: #2BE080;
-  justify-content: flex-end;
 }
 
 
 .search-form__checkbox-circle {
   position: absolute;
-  left: 5%;
+  left: 7%;
   width: 10px;
   height: 10px;
   background-color: #F5F5F5;
@@ -127,7 +126,7 @@
 
 .search-form__checkbox-circle_checked {
   background-color: #fff;
-  transform: translateX(195%);
+  transform: translateX(200%);
 }
 
 .search-form__checkbox-text {
