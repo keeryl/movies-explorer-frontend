@@ -49,6 +49,10 @@
   line-height: 13px;
 }
 
+.profile__input-lable:focus-within {
+  font-size: 12px;
+}
+
 .profile__input-lable_type_border-bottom {
   border-bottom: 1px solid #E8E8E8;;
 }
@@ -66,6 +70,7 @@
 
 .profile__input:focus {
   outline: none;
+  font-size: 12px;
 }
 
 .profile__buttons {

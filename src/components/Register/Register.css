@@ -58,6 +58,7 @@
 
 .register__form-input:focus {
   outline: none;
+  /* font-size: 20px; */
 }
 
 .register__submit-btn {
