@@ -28,6 +28,7 @@
   min-width: 22px;
   height: 22px;
   background-image: url(../../images/search_icon_grey.svg);
+  background-size: 20px 15px;
   background-repeat: no-repeat;
   background-position: center center;
   border: none;
@@ -49,10 +50,16 @@
   font-size: 18px;
   line-height: 20px;
   color: #A0A0A0;
+  transition: opacity .2s linear;
+  opacity: 1;
 }
 
 .search-form__input:focus {
   outline: none;
+}
+
+.search-form__input:focus::placeholder {
+  opacity: 0;
 }
 
 .search-form__button {
@@ -61,6 +68,7 @@
   min-width: 80px;
   height: 34px;
   background-image: url(../../images/search_icon_white.svg);
+  background-size: 20px 15px;
   background-repeat: no-repeat;
   background-position: center center;
   border: none;

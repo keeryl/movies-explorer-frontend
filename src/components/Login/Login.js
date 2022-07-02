@@ -27,7 +27,7 @@ function Login () {
         <Logo />
         <h2 className="login__header">Рады видеть!</h2>
         <fieldset className="login__form-inputs">
-          <lable className="login__input-lable">E-mail</lable>
+          <label className="login__input-lable">E-mail</label>
           <input
             type="email"
             className="login__form-input"
@@ -35,7 +35,7 @@ function Login () {
             value={email}
           >
           </input>
-          <lable className="login__input-lable">Пароль</lable>
+          <label className="login__input-lable">Пароль</label>
           <input
             type="password"
             className="login__form-input"

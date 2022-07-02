@@ -32,7 +32,7 @@ function Register () {
         <Logo />
         <h2 className="register__header">Добро пожаловать!</h2>
         <fieldset className="register__form-inputs">
-        <lable className="register__input-lable">Имя</lable>
+        <label className="register__input-lable">Имя</label>
           <input
             type="text"
             className="register__form-input"
@@ -40,7 +40,7 @@ function Register () {
             value={name}
           >
           </input>
-          <lable className="register__input-lable">E-mail</lable>
+          <label className="register__input-lable">E-mail</label>
           <input
             type="email"
             className="register__form-input"
@@ -48,7 +48,7 @@ function Register () {
             value={email}
           >
           </input>
-          <lable className="register__input-lable">Пароль</lable>
+          <label className="register__input-lable">Пароль</label>
           <input
             type="password"
             className="register__form-input"

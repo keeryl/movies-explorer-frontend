@@ -13,7 +13,7 @@ function SearchForm () {
     <form className="search-form">
       <fieldset className="search-form__search-field">
         <label className="search-form__input-lable"></label>
-        <input className="search-form__input" placeholder="Фильм"></input>
+        <input className="search-form__input" placeholder="Фильм" required></input>
         <button className="search-form__button"></button>
       </fieldset>
       <fieldset className="search-form__checkbox-field">
