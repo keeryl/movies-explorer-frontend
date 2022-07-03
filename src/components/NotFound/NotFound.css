@@ -1,0 +1,72 @@
+.not-found {
+  width: 100%;
+  height: 100vh;
+  background: #fff;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+}
+
+.not-found__text-container {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  align-self: center;
+  justify-self: center;
+  grid-column: 1/1;
+  grid-row: 1/1;
+}
+
+.not-found__error-number {
+  font-weight: 400;
+  font-size: 140px;
+  line-height: 169px;
+  margin: 0;
+}
+
+.not-found__error-text {
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 19px;
+  margin: 0;
+  text-align: center;
+}
+
+.not-found__link {
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 17px;
+  color: #3456F3;
+  text-decoration: none;
+  opacity: 1;
+  transition: opacity .2s linear;
+  cursor: pointer;
+  margin: 0;
+  align-self: flex-end;
+  justify-self: center;
+  margin-bottom: 60px;
+  outline: none;
+  background: none;
+  border: none;
+}
+
+.not-found__link:hover {
+  opacity: .5;
+}
+
+.not-found__link:focus {
+  outline: none;
+}
+
+.not-found__link:active{
+  opacity: .2;
+  cursor: default;
+  color: #3456F3;
+}
+
+@media screen and (max-width: 768px) {
+
+}

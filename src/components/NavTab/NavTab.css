@@ -1,0 +1,50 @@
+.navtab {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.navtab__link {
+  background: #E8E8E8;
+  border-radius: 10px;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 16px;
+  padding: 10px 0;
+  color: #FFFFFF;
+  cursor: pointer;
+  text-decoration: none;
+  opacity: 1;
+  transition: opacity .2s linear;
+  margin: 0;
+  width: 96px;
+  text-align: center;
+}
+
+.navtab__link:hover {
+  opacity: .7;
+}
+
+.navtab__link:focus {
+  outline: none;
+}
+
+.popup__link:active {
+  border: none;
+}
+
+.navtab__link:disabled {
+  opacity: .2;
+  cursor: default;
+}
+
+@media screen and (max-width: 540px) {
+
+  .navtab__link {
+    width: 82px;
+    font-size: 10px;
+  }
+
+}
