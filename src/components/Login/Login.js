@@ -1,16 +1,32 @@
+import React from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+
 import './Login.css';
 import Logo from '../Logo/Logo';
+import mainApi from '../../utils/MainApi';
 
-import React from 'react';
-import { Link } from 'react-router-dom';
 
-function Login () {
+
+function Login (props) {
 
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    mainApi.signin(password, email)
+    .then(res => {
+      if(res) {
+        console.log(res);
+        localStorage.setItem('token', res.token);
+        props.onSignin();
+        navigate('/movies', { replace: true });
+        setEmail('');
+        setPassword('');
+      }
+    })
+    .catch(err => console.log(err));
   }
 
   const handleEmailChange = (e) => {

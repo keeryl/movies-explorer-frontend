@@ -1,17 +1,37 @@
+import React from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+
 import './Register.css';
 import Logo from '../Logo/Logo';
-
-import React from 'react';
-import { Link } from 'react-router-dom';
+import mainApi from '../../utils/MainApi';
 
 function Register () {
 
   const [name, setName] = React.useState('');
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    mainApi.signup(email, password, name)
+    .then(res => {
+      if(res) {
+        console.log(res)
+        // localStorage.setItem('user', JSON.stringify({
+        //   email: res.user.email,
+        // }));
+        // props.onRegistrationSubmit(res.user);
+        navigate('/signin', { replace: true });
+        setPassword('');
+        setEmail('');
+        setName('');
+      }
+    })
+    .catch(err => {
+      // props.onRegistrationError();
+      console.log(err);
+    });
   }
 
   const handleNameChange = (e) => {
@@ -38,6 +58,7 @@ function Register () {
             className="register__form-input"
             onChange={handleNameChange}
             value={name}
+            required
           >
           </input>
           <label className="register__input-lable">E-mail</label>
@@ -46,6 +67,7 @@ function Register () {
             className="register__form-input"
             onChange={handleEmailChange}
             value={email}
+            required
           >
           </input>
           <label className="register__input-lable">Пароль</label>
@@ -54,6 +76,7 @@ function Register () {
             className="register__form-input"
             onChange={handlePasswordChange}
             value={password}
+            required
           >
           </input>
         </fieldset>
