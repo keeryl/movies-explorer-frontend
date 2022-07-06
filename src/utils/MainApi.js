@@ -46,20 +46,20 @@ class MainApi {
     .then(this._checkResponse);
   }
 
-  // updateUserProfile (jwt) {
-  //   return fetch(`${this._baseUrl}/users/me`, {
-  //     method: 'PATCH',
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //       "Authorization" : `Bearer ${jwt}`,
-  //     },
-  //     body: JSON.stringify({
-  //       email: userEmail,
-  //       name: userName,
-  //     }),
-  //   })
-  //   .then(this._checkResponse);
-  // }
+  updateUserProfile (jwt, userEmail, userName) {
+    return fetch(`${this._baseUrl}/users/me`, {
+      method: 'PATCH',
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization" : `Bearer ${jwt}`,
+      },
+      body: JSON.stringify({
+        email: userEmail,
+        name: userName,
+      }),
+    })
+    .then(this._checkResponse);
+  }
 
   _checkResponse (response) {
     if (response.ok) {

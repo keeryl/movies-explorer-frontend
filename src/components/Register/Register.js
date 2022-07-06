@@ -18,10 +18,6 @@ function Register () {
     .then(res => {
       if(res) {
         console.log(res)
-        // localStorage.setItem('user', JSON.stringify({
-        //   email: res.user.email,
-        // }));
-        // props.onRegistrationSubmit(res.user);
         navigate('/signin', { replace: true });
         setPassword('');
         setEmail('');
@@ -29,7 +25,6 @@ function Register () {
       }
     })
     .catch(err => {
-      // props.onRegistrationError();
       console.log(err);
     });
   }

@@ -33,8 +33,8 @@ function App() {
         .then(res => {
           if (res) {
             console.log(res);
-            setCurrentUser({ ...res.user });
-            // console.log(currentUser);
+            setCurrentUser(res.user);
+            console.log(currentUser);
             setLoggedIn(true);
             navigate('/movies', { replace: true });
           }
@@ -50,8 +50,9 @@ function App() {
     setLoggedIn(true);
   }
 
-  const handleOnSignup = () => {
-
+  function handleLogout () {
+    setLoggedIn(false);
+    setCurrentUser({});
   }
 
   return (
@@ -78,7 +79,7 @@ function App() {
           />
           <Route
             path="/profile"
-            element={<ProtectedRoute loggedIn={loggedIn} component={Profile}/>}
+            element={<ProtectedRoute loggedIn={loggedIn} onLogOut={handleLogout} component={Profile}/>}
           />
           <Route
             path="/movies"
