@@ -21,12 +21,12 @@ function MoviesCard (props) {
       <div className="movies-card__image-container">
         <img
           className="movies-card__image"
-          src={props.url}
-          alt={`Картинка фильма «Роллинг Стоунз» в изгнании`}
+          src={`https://api.nomoreparties.co${props.movie.image.url}`}
+          alt={`Картинка фильма ${props.movie.nameRU}`}
         />
       </div>
       <div className="movies-card__description-container">
-        <h2 className="movies-card__title">{props.title}</h2>
+        <h2 className="movies-card__title">{props.movie.nameRU}</h2>
         <button
           onClick={handleLikeClick}
           className={cardLikeBtnClassName}

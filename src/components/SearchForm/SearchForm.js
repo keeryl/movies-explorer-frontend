@@ -1,10 +1,12 @@
 import './SearchForm.css';
 import React from 'react';
+import moviesApi from '../../utils/MoviesApi';
 
-function SearchForm () {
+function SearchForm (props) {
 
+  const searchRequestData = JSON.parse(localStorage.searchRequset);
   const [isChecked, setIsChecked] = React.useState(true);
-  const [searchRequest, setSearchRequest] = React.useState('');
+  const [searchRequest, setSearchRequest] = React.useState(searchRequestData.request || '');
 
   const handleCheckBox = () => {
     setIsChecked(!isChecked);
@@ -16,6 +18,23 @@ function SearchForm () {
 
   const handleSearchFormSubmit = (e) => {
     e.preventDefault();
+    moviesApi.getMovies()
+    .then(res => {
+      if(res) {
+        console.log(res);
+        const searchRequset = {
+          checkBox: isChecked,
+          request: searchRequest,
+          movies: [ ...res ],
+        }
+        localStorage.setItem('searchRequset', JSON.stringify(searchRequset));
+        console.log(JSON.parse(localStorage.searchRequset));
+        props.onSearchRequest();
+      }
+    })
+    .catch(err => {
+      console.log(err);
+    });
   }
 
   return(
