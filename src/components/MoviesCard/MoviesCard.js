@@ -16,6 +16,12 @@ function MoviesCard (props) {
     setIsLiked(!isLiked);
   }
 
+  const countMovieDuration = (mins) => {
+    let hours = Math.trunc(mins/60);
+    let minutes = mins % 60;
+    return `${hours}ч ${minutes}м`;
+  }
+
   return(
     <li onClick={handleCardClick} className="movies-card">
       <div className="movies-card__image-container">
@@ -33,7 +39,9 @@ function MoviesCard (props) {
           type="button">
         </button>
       </div>
-      <span className="movies-card__duration">1ч 42м</span>
+      <span className="movies-card__duration">
+        {countMovieDuration(props.movie.duration)}
+      </span>
     </li>
   );
 }
