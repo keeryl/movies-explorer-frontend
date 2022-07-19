@@ -5,14 +5,19 @@ function MoviesCardList (props) {
 
   return(
     <ul className="movies-card-list">
-      {props.movies.map(movie => {
-        return (
-          <MoviesCard
-            key={movie.id}
-            movie={movie}
-          />
-        )
-      })}
+      {
+        props.movies.length !== 0 ?
+        props.movies.map(movie => {
+          return (
+            <MoviesCard
+              key={movie.id}
+              movie={movie}
+            />
+          )
+        })
+        :
+        <p>Ничего не найдено</p>
+      }
     </ul>
   );
 }
