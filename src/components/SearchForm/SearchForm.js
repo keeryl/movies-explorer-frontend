@@ -7,6 +7,7 @@ function SearchForm (props) {
   React.useEffect(() => {
     if (localStorage.getItem('searchRequest') !== null) {
       setSearchRequest(JSON.parse(localStorage.searchRequest).request);
+      setIsChecked(JSON.parse(localStorage.searchRequest).checkbox);
     }
   },[]);
 

@@ -8,6 +8,11 @@ function Movies () {
 
   React.useEffect(() => {
     getMoviesFromLocalStorage();
+    // renderMovies();
+    return () => {
+      setFilteredMovies([]);
+      setRenderedMovies([]);
+    }
   },[]);
 
   React.useEffect(() => {
@@ -49,24 +54,32 @@ function Movies () {
 
   const handleSearchSubmit = (moviesFromApi) => {
     const filteredMovies = filterMovies(moviesFromApi);
+    setFilteredMovies([]);
+    setRenderedMovies([]);
     setFilteredMovies(filteredMovies);
+    console.log(filteredMovies)
+    renderMovies();
   }
 
-  // const renderMovies = () => {
-  //   if (windowWidth >= 1280) {
-  //     setRenderedMovies(filteredMovies.slice(0,4));
-  //     setFilteredMovies();
-  //   }
-  //   if (windowWidth < 1280 && windowWidth >= 990) {
-  //     setRenderedMovies(filteredMovies.slice(0,3));
-  //   }
-  //   if (windowWidth < 990 && windowWidth >= 580) {
-  //     setRenderedMovies(filteredMovies.slice(0,2));
-  //   }
-  //   if (windowWidth < 580) {
-  //     setRenderedMovies(filteredMovies.slice(0,5));
-  //   }
-  // }
+  const renderMovies = () => {
+
+    if (windowWidth >= 1280) {
+      const moviesToRender = filteredMovies.splice(0,8);
+      console.log(filteredMovies);
+      setRenderedMovies([...renderedMovies, ...moviesToRender]);
+      setFilteredMovies(filteredMovies.splice(0,8));
+      console.log(filteredMovies);
+    }
+    // if (windowWidth < 1280 && windowWidth >= 990) {
+    //   setRenderedMovies(filteredMovies.slice(0,3));
+    // }
+    // if (windowWidth < 990 && windowWidth >= 580) {
+    //   setRenderedMovies(filteredMovies.slice(0,2));
+    // }
+    // if (windowWidth < 580) {
+    //   setRenderedMovies(filteredMovies.slice(0,5));
+    // }
+  }
 
   return(
     <main className="movies">
@@ -77,12 +90,15 @@ function Movies () {
       </section>
       <section className="movies__items">
         <MoviesCardList
-          movies={filteredMovies}
+          movies={renderedMovies}
         />
       </section>
-      <section className="movies__btn-section">
-        <button className="movies__load-btn">Ещё</button>
-      </section>
+      {
+      renderedMovies.length !== 0 &&
+        <section className="movies__btn-section">
+          <button onClick={renderMovies} className="movies__load-btn">Ещё</button>
+        </section>
+      }
     </main>
   );
 }
