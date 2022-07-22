@@ -32,9 +32,8 @@ function App() {
       mainApi.getCurrentUser(token)
         .then(res => {
           if (res) {
-            console.log(res);
+            // console.log(res);
             setCurrentUser(res.user);
-            console.log(currentUser);
             setLoggedIn(true);
             navigate('/movies', { replace: true });
           }
