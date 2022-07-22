@@ -22,16 +22,31 @@ function Movies () {
   const [filteredMovies, setFilteredMovies] = React.useState(() => {
     if (localStorage.getItem('searchRequest') !== null) {
       const movies = filterMovies(JSON.parse(localStorage.searchRequest).movies);
-      console.log('Отфильтрованные фильмы из LS')
-      console.log(movies)
       return [...movies];
     } else {
       return [];
     }
   });
   const [renderedMovies, setRenderedMovies] = React.useState([]);
-  const [arrIndex, setArrIndex] = React.useState(0);
   const [windowWidth, setWindowWidth] = React.useState(window.innerWidth);
+  const [numToRender, setNumToRender] = React.useState(() => {
+    if (windowWidth >= 1280) {
+      return 12;
+    }
+    if (windowWidth < 1280 && windowWidth >= 990) {
+      return 9;
+    }
+    if (windowWidth < 990 && windowWidth >= 580) {
+      return 6;
+    }
+    if (windowWidth < 580) {
+      return 5;
+    }
+  });
+
+  React.useEffect(() => {
+    countCardsToRender();
+  }, [windowWidth]);
 
   React.useEffect(() => {
     window.addEventListener("resize", updateWindowWidth);
@@ -39,84 +54,57 @@ function Movies () {
   });
 
   React.useEffect(() => {
-    // getMoviesFromLocalStorage();
-    return () => {
-      setFilteredMovies([]);
-      setRenderedMovies([]);
-      setArrIndex(0);
-    }
-  },[]);
-
-  React.useEffect(() => {
-    console.log('Вызван эффект renderMovies')
     renderMovies();
-    console.log('Изменен стейт filteredMovies')
-    console.log(filteredMovies);
   },[filteredMovies]);
 
-  React.useEffect(() => {
-    console.log('Изменен стейт renderedMovies')
-    console.log(renderedMovies);
-  },[renderedMovies]);
-
-  React.useEffect(() => {
-    console.log('Изменен стейт arrIndex')
-    console.log(arrIndex);
-  },[arrIndex]);
+  const countCardsToRender = () => {
+    if (windowWidth >= 1280) {
+      setNumToRender(12);
+    }
+    if (windowWidth < 1280 && windowWidth >= 990) {
+      setNumToRender(9);
+    }
+    if (windowWidth < 990 && windowWidth >= 580) {
+      setNumToRender(6);
+    }
+    if (windowWidth < 580) {
+      setNumToRender(5);
+    }
+  }
 
   const updateWindowWidth = () => {
     setWindowWidth(window.innerWidth);
   }
 
-
-
-  // const getMoviesFromLocalStorage = () => {
-  //   if (localStorage.getItem('searchRequest') !== null) {
-  //     const movies = filterMovies(JSON.parse(localStorage.searchRequest).movies);
-  //     setFilteredMovies(movies);
-  //   } else {
-  //     return;
-  //   }
-  // }
-
   const handleSearchSubmit = (moviesFromApi) => {
     const movies = filterMovies(moviesFromApi);
     setRenderedMovies([]);
-    setArrIndex(0);
+    countCardsToRender();
     setFilteredMovies(movies);
   }
 
   const renderMovies = () => {
-    console.log('Вызван renderMovies')
     if (windowWidth >= 1280) {
-      const moviesToRender = filteredMovies.splice(0, 8);
+      const moviesToRender = filteredMovies.splice(0, numToRender);
       setRenderedMovies([...renderedMovies, ...moviesToRender]);
-      // setArrIndex(prev => prev + 8);
-      console.log(filteredMovies);
-      // filteredMovies.splice(arrIndex,8)
+      setNumToRender(4);
     }
     if (windowWidth < 1280 && windowWidth >= 990) {
-      const moviesToRender = filteredMovies.splice(arrIndex,6);
+      const moviesToRender = filteredMovies.splice(0,numToRender);
       setRenderedMovies([...renderedMovies, ...moviesToRender]);
-      setArrIndex(prev => prev + 6);
+      setNumToRender(3);
     }
     if (windowWidth < 990 && windowWidth >= 580) {
-      const moviesToRender = filteredMovies.splice(arrIndex,4);
+      const moviesToRender = filteredMovies.splice(0,numToRender);
       setRenderedMovies([...renderedMovies, ...moviesToRender]);
-      setArrIndex(prev => prev + 4);
+      setNumToRender(2);
     }
     if (windowWidth < 580) {
-      const moviesToRender = filteredMovies.splice(arrIndex,5);
+      const moviesToRender = filteredMovies.splice(0,numToRender);
       setRenderedMovies([...renderedMovies, ...moviesToRender]);
-      setArrIndex(prev => prev + 5);
+      setNumToRender(2);
     }
   }
-
-  // const handleMoreBtn = () => {
-  //   setFilteredMovies(prev => {
-  //     return [prev.splice(arrIndex,8)
-  //   })
-  // }
 
   return(
     <main className="movies">
@@ -126,9 +114,12 @@ function Movies () {
         />
       </section>
       <section className="movies__items">
-        <MoviesCardList
+        {
+          localStorage.getItem('searchRequest') !== null &&
+          <MoviesCardList
           movies={renderedMovies}
         />
+        }
       </section>
       {
       filteredMovies.length !== 0 &&

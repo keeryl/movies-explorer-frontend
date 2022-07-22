@@ -27,13 +27,11 @@ function SearchForm (props) {
     moviesApi.getMovies()
     .then(res => {
       if(res) {
-        console.log(res);
         localStorage.setItem('searchRequest', JSON.stringify({
           checkBox: isChecked,
           request: searchRequest,
           movies: res,
         }));
-        console.log(JSON.parse(localStorage.searchRequest));
         props.onSearchRequest(JSON.parse(localStorage.searchRequest).movies);
       }
     })
