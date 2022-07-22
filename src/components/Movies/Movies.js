@@ -45,10 +45,6 @@ function Movies () {
   });
 
   React.useEffect(() => {
-    countCardsToRender();
-  }, [windowWidth]);
-
-  React.useEffect(() => {
     window.addEventListener("resize", updateWindowWidth);
     return () => window.removeEventListener("resize", updateWindowWidth);
   });
@@ -59,16 +55,16 @@ function Movies () {
 
   const countCardsToRender = () => {
     if (windowWidth >= 1280) {
-      setNumToRender(12);
+      renderedMovies.length === 0 ? setNumToRender(12) : setNumToRender(4)
     }
     if (windowWidth < 1280 && windowWidth >= 990) {
-      setNumToRender(9);
+      renderedMovies.length === 0 ? setNumToRender(9) : setNumToRender(3)
     }
     if (windowWidth < 990 && windowWidth >= 580) {
-      setNumToRender(6);
+      renderedMovies.length === 0 ? setNumToRender(6) : setNumToRender(2)
     }
     if (windowWidth < 580) {
-      setNumToRender(5);
+      renderedMovies.length === 0 ? setNumToRender(5) : setNumToRender(2)
     }
   }
 
@@ -78,39 +74,25 @@ function Movies () {
 
   const handleSearchSubmit = (moviesFromApi) => {
     const movies = filterMovies(moviesFromApi);
-    setRenderedMovies([]);
-    countCardsToRender();
     setFilteredMovies(movies);
   }
 
   const renderMovies = () => {
-    if (windowWidth >= 1280) {
+      countCardsToRender();
       const moviesToRender = filteredMovies.splice(0, numToRender);
       setRenderedMovies([...renderedMovies, ...moviesToRender]);
-      setNumToRender(4);
-    }
-    if (windowWidth < 1280 && windowWidth >= 990) {
-      const moviesToRender = filteredMovies.splice(0,numToRender);
-      setRenderedMovies([...renderedMovies, ...moviesToRender]);
-      setNumToRender(3);
-    }
-    if (windowWidth < 990 && windowWidth >= 580) {
-      const moviesToRender = filteredMovies.splice(0,numToRender);
-      setRenderedMovies([...renderedMovies, ...moviesToRender]);
-      setNumToRender(2);
-    }
-    if (windowWidth < 580) {
-      const moviesToRender = filteredMovies.splice(0,numToRender);
-      setRenderedMovies([...renderedMovies, ...moviesToRender]);
-      setNumToRender(2);
-    }
   }
+
+  React.useEffect(() => {
+    countCardsToRender();
+  }, [windowWidth, renderedMovies]);
 
   return(
     <main className="movies">
       <section className="movies__search-form">
         <SearchForm
           onSearchRequest={handleSearchSubmit}
+          setRenderedMovies={setRenderedMovies}
         />
       </section>
       <section className="movies__items">
