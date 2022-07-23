@@ -1,44 +1,19 @@
 import './SearchForm.css';
 import React from 'react';
-import moviesApi from '../../utils/MoviesApi';
 
 function SearchForm (props) {
 
-  React.useEffect(() => {
-    if (localStorage.getItem('searchRequest') !== null) {
-      setSearchRequest(JSON.parse(localStorage.searchRequest).request);
-      setIsChecked(JSON.parse(localStorage.searchRequest).checkBox);
-    }
-  },[]);
-
-  const [isChecked, setIsChecked] = React.useState(true);
-  const [searchRequest, setSearchRequest] = React.useState('');
-
   const handleCheckBox = () => {
-    setIsChecked(!isChecked);
+    props.setIsChecked(!props.isChecked);
   }
 
   const handleSearchInput = (e) => {
-    setSearchRequest(e.target.value);
+    props.setSearchRequest(e.target.value);
   }
 
   const handleSearchFormSubmit = (e) => {
     e.preventDefault();
-    props.setRenderedMovies([]);
-    moviesApi.getMovies()
-    .then(res => {
-      if(res) {
-        localStorage.setItem('searchRequest', JSON.stringify({
-          checkBox: isChecked,
-          request: searchRequest,
-          movies: res,
-        }));
-        props.onSearchRequest(JSON.parse(localStorage.searchRequest).movies);
-      }
-    })
-    .catch(err => {
-      console.log(err);
-    });
+    props.onSearchRequest();
   }
 
   return(
@@ -48,7 +23,7 @@ function SearchForm (props) {
         <input
           className="search-form__input"
           placeholder="Фильм"
-          value={searchRequest}
+          value={props.searchRequest}
           onChange={handleSearchInput}
           required
         >
@@ -59,14 +34,14 @@ function SearchForm (props) {
         <div
           onClick={handleCheckBox}
           className={
-            isChecked ?
+            props.isChecked ?
             `search-form__checkbox search-form__checkbox_checked`
             :
             `search-form__checkbox`
           }
         >
           <div
-            className={ isChecked ?
+            className={ props.isChecked ?
               `search-form__checkbox-circle search-form__checkbox-circle_checked`
               :
               `search-form__checkbox-circle`

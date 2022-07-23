@@ -61,6 +61,53 @@ class MainApi {
     .then(this._checkResponse);
   }
 
+  deleteMovie (jwt) {
+    return fetch(`${this._baseUrl}/movies/:movieId`, {
+      method: 'DELETE',
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization" : `Bearer ${jwt}`,
+      },
+    })
+    .then(this._checkResponse);
+  }
+
+  getSavedMovies (jwt) {
+    return fetch(`${this._baseUrl}/movies`, {
+      method: 'GET',
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization" : `Bearer ${jwt}`,
+      },
+    })
+    .then(this._checkResponse);
+  }
+
+  saveMovie (jwt, { movieData }) {
+    return fetch(`${this._baseUrl}/movies`, {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization" : `Bearer ${jwt}`,
+      },
+      body: JSON.stringify({
+        country: movieData.country,
+        director: movieData.director,
+        duration: movieData.duration,
+        year: movieData.year,
+        description: movieData.description,
+        image: movieData.description,
+        trailerLink: movieData.trailerLink,
+        thumbnail: movieData.thumbnail,
+        owner: movieData.owner,
+        movieId: movieData.movieId,
+        nameRU: movieData.nameRU,
+        nameEN: movieData.nameEN,
+      }),
+    })
+    .then(this._checkResponse);
+  }
+
   _checkResponse (response) {
     if (response.ok) {
       return response.json();

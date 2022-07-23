@@ -3,6 +3,8 @@ import './Movies.css';
 
 import SearchForm from '../SearchForm/SearchForm';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
+import moviesApi from '../../utils/MoviesApi';
+import mainApi from '../../utils/MainApi';
 
 function Movies () {
 
@@ -19,6 +21,8 @@ function Movies () {
     });
   }
 
+  const [isChecked, setIsChecked] = React.useState(true);
+  const [searchRequest, setSearchRequest] = React.useState('');
   const [filteredMovies, setFilteredMovies] = React.useState(() => {
     if (localStorage.getItem('searchRequest') !== null) {
       const movies = filterMovies(JSON.parse(localStorage.searchRequest).movies);
@@ -43,6 +47,13 @@ function Movies () {
       return 5;
     }
   });
+
+  React.useEffect(() => {
+    if (localStorage.getItem('searchRequest') !== null) {
+      setSearchRequest(JSON.parse(localStorage.searchRequest).request);
+      setIsChecked(JSON.parse(localStorage.searchRequest).checkBox);
+    }
+  },[]);
 
   React.useEffect(() => {
     window.addEventListener("resize", updateWindowWidth);
@@ -73,8 +84,33 @@ function Movies () {
   }
 
   const handleSearchSubmit = (moviesFromApi) => {
-    const movies = filterMovies(moviesFromApi);
-    setFilteredMovies(movies);
+    setRenderedMovies([]);
+    moviesApi.getMovies()
+    .then(res => {
+      if(res) {
+        localStorage.setItem('searchRequest', JSON.stringify({
+          checkBox: isChecked,
+          request: searchRequest,
+          movies: res,
+        }));
+        const movies = filterMovies(JSON.parse(localStorage.searchRequest).movies);
+        setFilteredMovies(movies);
+      }
+    })
+    .catch(err => {
+      console.log(err);
+    });
+  }
+
+  const handleLikeClick = (movie) => {
+    const token = localStorage.getItem('token');
+    mainApi.saveMovie(token, {})
+      .then(res => {
+        console.log(res);
+      })
+      .catch(err => {
+        console.log(err);
+      });
   }
 
   const renderMovies = () => {
@@ -92,15 +128,19 @@ function Movies () {
       <section className="movies__search-form">
         <SearchForm
           onSearchRequest={handleSearchSubmit}
-          setRenderedMovies={setRenderedMovies}
+          isChecked={isChecked}
+          searchRequest={searchRequest}
+          setIsChecked={setIsChecked}
+          setSearchRequest={setSearchRequest}
         />
       </section>
       <section className="movies__items">
         {
           localStorage.getItem('searchRequest') !== null &&
           <MoviesCardList
-          movies={renderedMovies}
-        />
+            movies={renderedMovies}
+            onLikeClick={handleLikeClick}
+          />
         }
       </section>
       {

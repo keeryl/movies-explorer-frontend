@@ -12,6 +12,7 @@ function MoviesCardList (props) {
             <MoviesCard
               key={movie.id}
               movie={movie}
+              onLikeClick={props.onLikeClick}
             />
           )
         })
