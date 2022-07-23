@@ -7,12 +7,13 @@ function MoviesCardList (props) {
     <ul className="movies-card-list">
       {
         props.movies.length !== 0 ?
-        props.movies.map(movie => {
+        props.movies.map((movie, index) => {
           return (
             <MoviesCard
-              key={movie.id}
+              key={index}
               movie={movie}
               onLikeClick={props.onLikeClick}
+              urlPrefix={props.urlPrefix}
             />
           )
         })

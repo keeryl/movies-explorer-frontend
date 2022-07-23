@@ -8,17 +8,7 @@ import mainApi from '../../utils/MainApi';
 function SavedMovies () {
 
   React.useEffect(() => {
-    const token = localStorage.getItem('token');
-    mainApi.getSavedMovies(token)
-      .then(res => {
-        if (res) {
-          console.log(res);
-          setSavedMovies(res);
-        }
-      })
-      .catch(err => {
-        console.log(err);
-      });
+    getSavedMovies();
   },[]);
 
   const [savedMovies, setSavedMovies] = React.useState([]);
@@ -33,6 +23,20 @@ function SavedMovies () {
         return movie.nameRU.includes(searchRequest);
       }
     });
+  }
+
+  const getSavedMovies = () => {
+    const token = localStorage.getItem('token');
+    mainApi.getSavedMovies(token)
+      .then(res => {
+        if (res) {
+          console.log(res);
+          setSavedMovies(res);
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
   }
 
   const handleSearchSubmit = () => {
@@ -54,7 +58,10 @@ function SavedMovies () {
       <section className="saved-movies__items">
         {
           savedMovies.length !== 0 ?
-            <MoviesCardList movies={savedMovies}/>
+            <MoviesCardList
+              movies={savedMovies}
+              urlPrefix={''}
+            />
             :
             <p>Нет соранённых фильмов</p>
         }

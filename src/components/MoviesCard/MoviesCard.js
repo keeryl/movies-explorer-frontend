@@ -14,6 +14,8 @@ function MoviesCard (props) {
 
   const handleLikeClick = () => {
     setIsLiked(!isLiked);
+    console.log(props.movie);
+    props.onLikeClick(props.movie);
   }
 
   const countMovieDuration = (mins) => {
@@ -27,7 +29,7 @@ function MoviesCard (props) {
       <div className="movies-card__image-container">
         <img
           className="movies-card__image"
-          src={`https://api.nomoreparties.co${props.movie.image.url}`}
+          src={`${props.urlPrefix}${props.movie.image.url === undefined ? props.movie.image : props.movie.image.url}`}
           alt={`Картинка фильма ${props.movie.nameRU}`}
         />
       </div>

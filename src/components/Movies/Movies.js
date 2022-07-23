@@ -62,6 +62,7 @@ function Movies () {
 
   React.useEffect(() => {
     renderMovies();
+    console.log(filteredMovies);
   },[filteredMovies]);
 
   const countCardsToRender = () => {
@@ -103,9 +104,11 @@ function Movies () {
   }
 
   const handleLikeClick = (movie) => {
+    console.log(movie);
     const token = localStorage.getItem('token');
-    mainApi.saveMovie(token, {})
+    mainApi.saveMovie(token, movie)
       .then(res => {
+        console.log('ответ на запрос')
         console.log(res);
       })
       .catch(err => {
@@ -140,6 +143,7 @@ function Movies () {
           <MoviesCardList
             movies={renderedMovies}
             onLikeClick={handleLikeClick}
+            urlPrefix={'https://api.nomoreparties.co'}
           />
         }
       </section>

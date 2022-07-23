@@ -83,7 +83,7 @@ class MainApi {
     .then(this._checkResponse);
   }
 
-  saveMovie (jwt, { movieData }) {
+  saveMovie (jwt, movieData) {
     return fetch(`${this._baseUrl}/movies`, {
       method: 'POST',
       headers: {
@@ -93,14 +93,13 @@ class MainApi {
       body: JSON.stringify({
         country: movieData.country,
         director: movieData.director,
-        duration: movieData.duration,
+        duration: movieData.duration.toString(),
         year: movieData.year,
         description: movieData.description,
-        image: movieData.description,
+        image: `https://api.nomoreparties.co${movieData.image.url}`,
         trailerLink: movieData.trailerLink,
-        thumbnail: movieData.thumbnail,
-        owner: movieData.owner,
-        movieId: movieData.movieId,
+        thumbnail: `https://api.nomoreparties.co${movieData.image.url}`,
+        movieId: movieData.id.toString(),
         nameRU: movieData.nameRU,
         nameEN: movieData.nameEN,
       }),
