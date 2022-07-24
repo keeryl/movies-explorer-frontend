@@ -4,16 +4,20 @@ import React from 'react';
 import SearchForm from '../SearchForm/SearchForm';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import mainApi from '../../utils/MainApi';
+import CurrentUserContext from '../../contexts/CurrentUserContext';
 
 function SavedMovies () {
 
-  React.useEffect(() => {
-    getSavedMovies();
-  },[]);
-
+  const currentUser = React.useContext(CurrentUserContext);
   const [savedMovies, setSavedMovies] = React.useState([]);
   const [isChecked, setIsChecked] = React.useState(false);
   const [searchRequest, setSearchRequest] = React.useState('');
+
+  React.useEffect(() => {
+    if (searchRequest === '') {
+      getSavedMovies();
+    }
+  },[searchRequest]);
 
   const filterMovies = (unfilteredMovies) => {
     return unfilteredMovies.filter(movie => {
@@ -30,8 +34,20 @@ function SavedMovies () {
     mainApi.getSavedMovies(token)
       .then(res => {
         if (res) {
-          console.log(res);
-          setSavedMovies(res);
+          setSavedMovies(() => res.filter(m => m.owner === currentUser._id));
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }
+
+  const handleLikeClick = (movie) => {
+    const token = localStorage.getItem('token');
+    mainApi.deleteMovie(token, movie._id)
+      .then(res => {
+        if (res) {
+          getSavedMovies();
         }
       })
       .catch(err => {
@@ -48,7 +64,7 @@ function SavedMovies () {
     <main className="saved-movies">
       <section className="saved-movies__search-form">
         <SearchForm
-          onSearchSubmit={handleSearchSubmit}
+          onSearchRequest={handleSearchSubmit}
           isChecked={isChecked}
           searchRequest={searchRequest}
           setSearchRequest={setSearchRequest}
@@ -60,10 +76,12 @@ function SavedMovies () {
           savedMovies.length !== 0 ?
             <MoviesCardList
               movies={savedMovies}
+              onLikeClick={handleLikeClick}
               urlPrefix={''}
+              savedMovies={savedMovies}
             />
             :
-            <p>Нет соранённых фильмов</p>
+            <p>Нет сохранённых фильмов</p>
         }
       </section>
     </main>

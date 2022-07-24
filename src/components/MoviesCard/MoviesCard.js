@@ -3,18 +3,26 @@ import React from 'react';
 
 function MoviesCard (props) {
 
-  const [isLiked, setIsLiked] = React.useState(false);
+  const [isLiked, setIsLiked] = React.useState(
+    () => props.savedMovies.some(m => props.movie.id === undefined ?
+      m.movieId === props.movie.movieId
+      :
+      m.movieId === props.movie.id
+      )
+  );
   const cardLikeBtnClassName = (
     `movies-card__like-button ${ isLiked && `movies-card__like-button_liked`}`
   );
 
-  const handleCardClick = () => {
-
-  }
+  React.useEffect(() => {
+    setIsLiked(() => props.savedMovies.some(m => props.movie.id === undefined ?
+      m.movieId === props.movie.movieId
+      :
+      m.movieId === props.movie.id
+      ));
+  },[props.savedMovies]);
 
   const handleLikeClick = () => {
-    setIsLiked(!isLiked);
-    console.log(props.movie);
     props.onLikeClick(props.movie);
   }
 
@@ -25,14 +33,19 @@ function MoviesCard (props) {
   }
 
   return(
-    <li onClick={handleCardClick} className="movies-card">
-      <div className="movies-card__image-container">
+    <li className="movies-card">
+      <a
+        className="movies-card__image-container"
+        href={props.movie.trailerLink}
+        target="_blank"
+        rel="noreferrer"
+      >
         <img
           className="movies-card__image"
           src={`${props.urlPrefix}${props.movie.image.url === undefined ? props.movie.image : props.movie.image.url}`}
           alt={`Картинка фильма ${props.movie.nameRU}`}
         />
-      </div>
+      </a>
       <div className="movies-card__description-container">
         <h2 className="movies-card__title">{props.movie.nameRU}</h2>
         <button

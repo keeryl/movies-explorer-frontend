@@ -5,6 +5,7 @@ import SearchForm from '../SearchForm/SearchForm';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import moviesApi from '../../utils/MoviesApi';
 import mainApi from '../../utils/MainApi';
+import CurrentUserContext from '../../contexts/CurrentUserContext';
 
 function Movies () {
 
@@ -21,6 +22,8 @@ function Movies () {
     });
   }
 
+  const currentUser = React.useContext(CurrentUserContext);
+  const [savedMovies, setSavedMovies] = React.useState([]);
   const [isChecked, setIsChecked] = React.useState(true);
   const [searchRequest, setSearchRequest] = React.useState('');
   const [filteredMovies, setFilteredMovies] = React.useState(() => {
@@ -56,14 +59,21 @@ function Movies () {
   },[]);
 
   React.useEffect(() => {
-    window.addEventListener("resize", updateWindowWidth);
-    return () => window.removeEventListener("resize", updateWindowWidth);
+    window.addEventListener("resize",
+      function () {setTimeout(updateWindowWidth, 1000)}
+    );
+    return () => window.removeEventListener("resize",
+      function () {setTimeout(updateWindowWidth, 1000)}
+    );
   });
 
   React.useEffect(() => {
     renderMovies();
-    console.log(filteredMovies);
   },[filteredMovies]);
+
+  React.useEffect(() => {
+    getSavedMovies();
+  },[]);
 
   const countCardsToRender = () => {
     if (windowWidth >= 1280) {
@@ -84,7 +94,20 @@ function Movies () {
     setWindowWidth(window.innerWidth);
   }
 
-  const handleSearchSubmit = (moviesFromApi) => {
+  const getSavedMovies = () => {
+    const token = localStorage.getItem('token');
+    mainApi.getSavedMovies(token)
+      .then(res => {
+        if (res) {
+          setSavedMovies(() => res.filter(m => m.owner === currentUser._id));
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }
+
+  const handleSearchSubmit = () => {
     setRenderedMovies([]);
     moviesApi.getMovies()
     .then(res => {
@@ -104,16 +127,30 @@ function Movies () {
   }
 
   const handleLikeClick = (movie) => {
-    console.log(movie);
+    const isLiked = savedMovies.some(m => m.movieId === movie.id);
+    const movieToDelete = savedMovies.find(m => m.movieId === movie.id)
     const token = localStorage.getItem('token');
-    mainApi.saveMovie(token, movie)
+    if (!isLiked) {
+      mainApi.saveMovie(token, movie)
       .then(res => {
-        console.log('ответ на запрос')
-        console.log(res);
+        if (res) {
+          getSavedMovies();
+        }
       })
       .catch(err => {
         console.log(err);
       });
+    } else {
+      mainApi.deleteMovie(token, movieToDelete._id)
+      .then(res => {
+        if (res) {
+          getSavedMovies();
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
+    }
   }
 
   const renderMovies = () => {
@@ -144,6 +181,7 @@ function Movies () {
             movies={renderedMovies}
             onLikeClick={handleLikeClick}
             urlPrefix={'https://api.nomoreparties.co'}
+            savedMovies={savedMovies}
           />
         }
       </section>

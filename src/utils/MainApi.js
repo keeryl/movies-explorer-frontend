@@ -61,8 +61,8 @@ class MainApi {
     .then(this._checkResponse);
   }
 
-  deleteMovie (jwt) {
-    return fetch(`${this._baseUrl}/movies/:movieId`, {
+  deleteMovie (jwt, movieId) {
+    return fetch(`${this._baseUrl}/movies/${movieId}`, {
       method: 'DELETE',
       headers: {
         "Content-Type": "application/json",
@@ -91,17 +91,24 @@ class MainApi {
         "Authorization" : `Bearer ${jwt}`,
       },
       body: JSON.stringify({
-        country: movieData.country,
-        director: movieData.director,
-        duration: movieData.duration.toString(),
-        year: movieData.year,
-        description: movieData.description,
+        country: movieData.country === null || movieData.country === undefined ?
+          'undefined' : movieData.country,
+        director: movieData.director === null || movieData.director === undefined ?
+          'undefined' : movieData.director,
+        duration: movieData.duration === null || movieData.duration === undefined ?
+          'undefined' : movieData.duration.toString(),
+        year: movieData.year === null || movieData.year === undefined ?
+          'undefined' : movieData.year,
+        description: movieData.description === null || movieData.description === undefined ?
+          'undefined' : movieData.description,
         image: `https://api.nomoreparties.co${movieData.image.url}`,
         trailerLink: movieData.trailerLink,
         thumbnail: `https://api.nomoreparties.co${movieData.image.url}`,
         movieId: movieData.id.toString(),
-        nameRU: movieData.nameRU,
-        nameEN: movieData.nameEN,
+        nameRU: movieData.nameRU === null || movieData.nameRU === undefined ?
+          'undefined' : movieData.nameRU,
+        nameEN: movieData.nameEN === null || movieData.nameEN === undefined ?
+          'undefined' : movieData.nameEN,
       }),
     })
     .then(this._checkResponse);

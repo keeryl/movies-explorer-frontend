@@ -14,6 +14,7 @@ function MoviesCardList (props) {
               movie={movie}
               onLikeClick={props.onLikeClick}
               urlPrefix={props.urlPrefix}
+              savedMovies={props.savedMovies}
             />
           )
         })
