@@ -91,24 +91,25 @@ class MainApi {
         "Authorization" : `Bearer ${jwt}`,
       },
       body: JSON.stringify({
-        country: movieData.country === null || movieData.country === undefined ?
-          'undefined' : movieData.country,
-        director: movieData.director === null || movieData.director === undefined ?
-          'undefined' : movieData.director,
-        duration: movieData.duration === null || movieData.duration === undefined ?
-          'undefined' : movieData.duration.toString(),
-        year: movieData.year === null || movieData.year === undefined ?
-          'undefined' : movieData.year,
-        description: movieData.description === null || movieData.description === undefined ?
-          'undefined' : movieData.description,
+        country: movieData.country === null ?
+          'Значение отсутствует' : movieData.country,
+        director: movieData.director === null ?
+          'Значение отсутствует' : movieData.director,
+        duration: movieData.duration === null ?
+          'Значение отсутствует' : movieData.duration.toString(),
+        year: movieData.year === null ?
+          'Значение отсутствует' : movieData.year,
+        description: movieData.description === null ?
+          'Значение отсутствует' : movieData.description,
         image: `https://api.nomoreparties.co${movieData.image.url}`,
-        trailerLink: movieData.trailerLink,
+        trailerLink: movieData.trailerLink === null || typeof movieData.trailerLink === 'string' ?
+          'https://www.youtube.com' : movieData.trailerLink,
         thumbnail: `https://api.nomoreparties.co${movieData.image.url}`,
         movieId: movieData.id.toString(),
-        nameRU: movieData.nameRU === null || movieData.nameRU === undefined ?
-          'undefined' : movieData.nameRU,
-        nameEN: movieData.nameEN === null || movieData.nameEN === undefined ?
-          'undefined' : movieData.nameEN,
+        nameRU: movieData.nameRU === null ?
+          'Значение отсутствует' : movieData.nameRU,
+        nameEN: movieData.nameEN === null ?
+          'Значение отсутствует' : movieData.nameEN,
       }),
     })
     .then(this._checkResponse);

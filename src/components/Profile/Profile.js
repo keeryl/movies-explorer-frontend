@@ -7,9 +7,14 @@ import mainApi from '../../utils/MainApi';
 function Profile (props) {
 
   const currentUser = React.useContext(CurrentUserContext);
-  const [userName, setUserName] = React.useState(currentUser.name);
-  const [userEmail, setUserEmail] = React.useState(currentUser.email);
+  const [userName, setUserName] = React.useState('');
+  const [userEmail, setUserEmail] = React.useState('');
   const navigate = useNavigate();
+
+  React.useEffect(() => {
+    setUserName(currentUser.name);
+    setUserEmail(currentUser.email);
+  }, [currentUser])
 
   const handleSubmit = (e) => {
     const token = localStorage.getItem('token');
@@ -44,7 +49,7 @@ function Profile (props) {
   return(
     <main className="profile">
       <form className="profile__form" onSubmit={handleSubmit}>
-        <h2 className="profile__header">{`Привет, ${currentUser.name}!`}</h2>
+        <h2 className="profile__header">{`Привет, ${userName}!`}</h2>
         <fieldset className="profile__inputs">
           <label className="profile__input-lable profile__input-lable_type_border-bottom">
             Имя

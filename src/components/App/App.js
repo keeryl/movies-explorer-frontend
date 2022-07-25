@@ -22,10 +22,6 @@ function App() {
   const [currentUser, setCurrentUser] = React.useState({});
   const navigate = useNavigate();
 
-  // React.useEffect(() => {
-  //   console.log({currentUser})
-  // }, [currentUser]);
-
   React.useEffect(() => {
     tokenCheck();
   }, []);
@@ -49,8 +45,8 @@ function App() {
   }
 
   const handleOnSignin = () => {
-    // tockenCheck();
-    setLoggedIn(true);
+    tokenCheck();
+    // setLoggedIn(true);
   }
 
   function handleLogout () {

@@ -5,6 +5,7 @@ import SearchForm from '../SearchForm/SearchForm';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import mainApi from '../../utils/MainApi';
 import CurrentUserContext from '../../contexts/CurrentUserContext';
+import Preloader  from '../Preloader/Preloader';
 
 function SavedMovies () {
 
@@ -12,6 +13,7 @@ function SavedMovies () {
   const [savedMovies, setSavedMovies] = React.useState([]);
   const [isChecked, setIsChecked] = React.useState(false);
   const [searchRequest, setSearchRequest] = React.useState('');
+  const [isLoading, setIsLoading] = React.useState(false);
 
   React.useEffect(() => {
     if (searchRequest === '') {
@@ -31,14 +33,17 @@ function SavedMovies () {
 
   const getSavedMovies = () => {
     const token = localStorage.getItem('token');
+    setIsLoading(true);
     mainApi.getSavedMovies(token)
       .then(res => {
         if (res) {
           setSavedMovies(() => res.filter(m => m.owner === currentUser._id));
+          setIsLoading(false);
         }
       })
       .catch(err => {
         console.log(err);
+        setIsLoading(false);
       });
   }
 
@@ -47,7 +52,7 @@ function SavedMovies () {
     mainApi.deleteMovie(token, movie._id)
       .then(res => {
         if (res) {
-          getSavedMovies();
+          setSavedMovies(savedMovies => savedMovies.filter(m => m._id !== res.deletedMovie._id));
         }
       })
       .catch(err => {
@@ -73,7 +78,11 @@ function SavedMovies () {
       </section>
       <section className="saved-movies__items">
         {
-          savedMovies.length !== 0 ?
+          isLoading &&
+          <Preloader />
+        }
+        {
+          savedMovies.length !== 0 && !isLoading ?
             <MoviesCardList
               movies={savedMovies}
               onLikeClick={handleLikeClick}

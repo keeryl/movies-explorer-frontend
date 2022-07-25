@@ -6,13 +6,14 @@ import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import moviesApi from '../../utils/MoviesApi';
 import mainApi from '../../utils/MainApi';
 import CurrentUserContext from '../../contexts/CurrentUserContext';
+import Preloader  from '../Preloader/Preloader';
 
 function Movies () {
 
   const filterMovies = (unfilteredMovies) => {
-    const searchRequestData = JSON.parse(localStorage.searchRequest);
-    const checkBoxState = searchRequestData.checkBox;
-    const request = searchRequestData.request;
+    const localStorageItem = localStorage.getItem(currentUser._id);
+    const checkBoxState = JSON.parse(localStorageItem).checkBox;
+    const request = JSON.parse(localStorageItem).request;
     return unfilteredMovies.filter(movie => {
       if (checkBoxState === true) {
         return movie.duration <= 40 && movie.nameRU.includes(request);
@@ -27,13 +28,16 @@ function Movies () {
   const [isChecked, setIsChecked] = React.useState(true);
   const [searchRequest, setSearchRequest] = React.useState('');
   const [filteredMovies, setFilteredMovies] = React.useState(() => {
-    if (localStorage.getItem('searchRequest') !== null) {
-      const movies = filterMovies(JSON.parse(localStorage.searchRequest).movies);
+    if (localStorage.getItem(currentUser._id) !== null) {
+      const localStorageItem = localStorage.getItem(currentUser._id);
+      const localStorageMovies = JSON.parse(localStorageItem).movies;
+      const movies = filterMovies(localStorageMovies);
       return [...movies];
     } else {
       return [];
     }
   });
+  const [isLoading, setIsLoading] = React.useState(false);
   const [renderedMovies, setRenderedMovies] = React.useState([]);
   const [windowWidth, setWindowWidth] = React.useState(window.innerWidth);
   const [numToRender, setNumToRender] = React.useState(() => {
@@ -52,9 +56,10 @@ function Movies () {
   });
 
   React.useEffect(() => {
-    if (localStorage.getItem('searchRequest') !== null) {
-      setSearchRequest(JSON.parse(localStorage.searchRequest).request);
-      setIsChecked(JSON.parse(localStorage.searchRequest).checkBox);
+    const localStorageItem = localStorage.getItem(currentUser._id);
+    if (localStorage.getItem(currentUser._id) !== null) {
+      setSearchRequest(JSON.parse(localStorageItem).request);
+      setIsChecked(JSON.parse(localStorageItem).checkBox);
     }
   },[]);
 
@@ -109,19 +114,22 @@ function Movies () {
 
   const handleSearchSubmit = () => {
     setRenderedMovies([]);
+    setIsLoading(true);
     moviesApi.getMovies()
     .then(res => {
       if(res) {
-        localStorage.setItem('searchRequest', JSON.stringify({
+        localStorage.setItem(currentUser._id, JSON.stringify({
           checkBox: isChecked,
           request: searchRequest,
           movies: res,
         }));
-        const movies = filterMovies(JSON.parse(localStorage.searchRequest).movies);
+        const movies = filterMovies(JSON.parse(localStorage.getItem(currentUser._id)).movies);
         setFilteredMovies(movies);
+        setIsLoading(false);
       }
     })
     .catch(err => {
+      setIsLoading(false);
       console.log(err);
     });
   }
@@ -176,7 +184,11 @@ function Movies () {
       </section>
       <section className="movies__items">
         {
-          localStorage.getItem('searchRequest') !== null &&
+          isLoading &&
+          <Preloader />
+        }
+        {
+          localStorage.getItem(currentUser._id) !== null && !isLoading &&
           <MoviesCardList
             movies={renderedMovies}
             onLikeClick={handleLikeClick}
@@ -186,7 +198,7 @@ function Movies () {
         }
       </section>
       {
-      filteredMovies.length !== 0 &&
+      filteredMovies.length !== 0 && !isLoading &&
         <section className="movies__btn-section">
           <button onClick={renderMovies} className="movies__load-btn">Ещё</button>
         </section>
