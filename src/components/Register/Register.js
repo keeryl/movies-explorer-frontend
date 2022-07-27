@@ -1,44 +1,51 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { validate } from 'react-email-validator';
+
 
 import './Register.css';
 import Logo from '../Logo/Logo';
-import mainApi from '../../utils/MainApi';
 
-function Register () {
+function Register (props) {
 
-  const [name, setName] = React.useState('');
-  const [email, setEmail] = React.useState('');
-  const [password, setPassword] = React.useState('');
-  const navigate = useNavigate();
+  React.useEffect(() => {
+    props.setIsValid(false);
+    return () => {
+      props.setUserName('');
+      props.setUserEmail('');
+      props.setPassword('');
+    }
+  }, []);
+
+  React.useEffect(() => {
+    checkFormValidity();
+  }, [props.password, props.userEmail, props.userName]);
+
+  const checkFormValidity = () => {
+    const isEmailValid = validate(props.userEmail) && props.userEmail.length > 0;
+    const isUserNameValid = props.userName.length > 0;
+    const isPasswordValid = props.password.length > 5;
+    isEmailValid && isUserNameValid && isPasswordValid ?
+    props.setIsValid(true)
+    :
+    props.setIsValid(false)
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    mainApi.signup(email, password, name)
-    .then(res => {
-      if(res) {
-        console.log(res)
-        navigate('/signin', { replace: true });
-        setPassword('');
-        setEmail('');
-        setName('');
-      }
-    })
-    .catch(err => {
-      console.log(err);
-    });
+    props.onSubmit();
   }
 
   const handleNameChange = (e) => {
-    setName(e.target.value);
+    props.setUserName(e.target.value);
   }
 
   const handleEmailChange = (e) => {
-    setEmail(e.target.value);
+    props.setUserEmail(e.target.value);
   }
 
   const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
+    props.setPassword(e.target.value);
   }
 
   return(
@@ -52,7 +59,7 @@ function Register () {
             type="text"
             className="register__form-input"
             onChange={handleNameChange}
-            value={name}
+            value={props.userName}
             required
           >
           </input>
@@ -61,7 +68,7 @@ function Register () {
             type="email"
             className="register__form-input"
             onChange={handleEmailChange}
-            value={email}
+            value={props.userEmail}
             required
           >
           </input>
@@ -70,7 +77,7 @@ function Register () {
             type="password"
             className="register__form-input"
             onChange={handlePasswordChange}
-            value={password}
+            value={props.password}
             required
           >
           </input>
@@ -78,6 +85,7 @@ function Register () {
         <button
           className="register__submit-btn"
           type="submit"
+          disabled={!props.isValid}
         >
           Зарегистрироваться
         </button>

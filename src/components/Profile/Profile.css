@@ -104,6 +104,12 @@
   border: none;
 }
 
+.profile__button:disabled {
+  border: none;
+  opacity: 1;
+  cursor: default;
+}
+
 .profile__button_type_submit {
   font-weight: 400;
   font-size: 13px;

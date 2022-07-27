@@ -20,6 +20,10 @@ function App() {
   const location = useLocation();
   const [loggedIn, setLoggedIn] = React.useState(false);
   const [currentUser, setCurrentUser] = React.useState({});
+  const [userName, setUserName] = React.useState('');
+  const [userEmail, setUserEmail] = React.useState('');
+  const [password, setPassword] = React.useState('');
+  const [isValid, setIsValid] = React.useState(true);
   const navigate = useNavigate();
 
   React.useEffect(() => {
@@ -34,6 +38,8 @@ function App() {
           if (res) {
             // console.log(res);
             setCurrentUser(res.user);
+            setUserName(res.user.name);
+            setUserEmail(res.user.email);
             setLoggedIn(true);
             navigate('/movies', { replace: true });
           }
@@ -44,14 +50,65 @@ function App() {
     }
   }
 
-  const handleOnSignin = () => {
-    tokenCheck();
-    // setLoggedIn(true);
+  const handleRegistrationSubmit = () => {
+    setIsValid(false);
+    mainApi.signup(userEmail, password, userName)
+    .then(res => {
+      if(res) {
+        console.log(res.user.email);
+        setUserEmail(res.user.email);
+        navigate('/signin', { replace: true });
+        setIsValid(true);
+        setPassword('');
+        setUserName('');
+      }
+    })
+    .catch(err => {
+      console.log(err);
+      setIsValid(true);
+    });
   }
 
-  function handleLogout () {
+  const handleLoginSubmit = () => {
+    setIsValid(false);
+    mainApi.signin(password, userEmail)
+    .then(res => {
+      if(res) {
+        console.log(res);
+        localStorage.setItem('token', res.token);
+        navigate('/movies', { replace: true });
+        tokenCheck();
+        setPassword('');
+        setIsValid(true);
+      }
+    })
+    .catch(err => {
+      console.log(err);
+      setIsValid(true);
+    });
+  }
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
     setLoggedIn(false);
     setCurrentUser({});
+    navigate('/', { replace: true });
+  }
+
+  const handleUpdateUserSubmit = () => {
+    const token = localStorage.getItem('token');
+    setIsValid(false);
+    mainApi.updateUserProfile(token, userEmail, userName)
+      .then(res => {
+        if(res) {
+          setCurrentUser(res.user);
+          setIsValid(true);
+        }
+      })
+      .catch(err => {
+        console.log(err);
+        setIsValid(true);
+      });
   }
 
   return (
@@ -70,15 +127,49 @@ function App() {
           />
           <Route
             path="/signin"
-            element={<Login onSignin={handleOnSignin}/>}
+            element={
+              <Login
+                onSubmit={handleLoginSubmit}
+                userEmail={userEmail}
+                password={password}
+                setUserEmail={setUserEmail}
+                setPassword={setPassword}
+                isValid={isValid}
+                setIsValid={setIsValid}
+              />
+            }
           />
           <Route
             path="/signup"
-            element={<Register />}
+            element={
+              <Register
+                onSubmit={handleRegistrationSubmit}
+                userName={userName}
+                userEmail={userEmail}
+                password={password}
+                setUserName={setUserName}
+                setUserEmail={setUserEmail}
+                setPassword={setPassword}
+                isValid={isValid}
+                setIsValid={setIsValid}
+              />
+            }
           />
           <Route
             path="/profile"
-            element={<ProtectedRoute loggedIn={loggedIn} onLogOut={handleLogout} component={Profile}/>}
+            element={
+              <ProtectedRoute
+                loggedIn={loggedIn}
+                onSubmit={handleUpdateUserSubmit}
+                userName={userName}
+                userEmail={userEmail}
+                setUserName={setUserName}
+                setUserEmail={setUserEmail}
+                isValid={isValid}
+                setIsValid={setIsValid}
+                onLogOut={handleLogout}
+                component={Profile}/>
+            }
           />
           <Route
             path="/movies"

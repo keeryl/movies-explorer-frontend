@@ -1,40 +1,45 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { validate } from 'react-email-validator';
 
 import './Login.css';
 import Logo from '../Logo/Logo';
-import mainApi from '../../utils/MainApi';
-
-
 
 function Login (props) {
 
-  const [email, setEmail] = React.useState('');
-  const [password, setPassword] = React.useState('');
-  const navigate = useNavigate();
+  React.useEffect(() => {
+    console.log(props.userEmail);
+    props.setIsValid(false);
+    props.setUserEmail(props.userEmail);
+    return () => {
+      props.setUserEmail('');
+    }
+  }, []);
+
+  React.useEffect(() => {
+    checkFormValidity();
+  }, [props.password, props.userEmail]);
+
+  const checkFormValidity = () => {
+    const isEmailValid = validate(props.userEmail) && props.userEmail.length > 0;
+    const isPasswordValid = props.password.length > 5;
+    isEmailValid && isPasswordValid ?
+    props.setIsValid(true)
+    :
+    props.setIsValid(false)
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    mainApi.signin(password, email)
-    .then(res => {
-      if(res) {
-        console.log(res);
-        localStorage.setItem('token', res.token);
-        props.onSignin();
-        navigate('/movies', { replace: true });
-        setEmail('');
-        setPassword('');
-      }
-    })
-    .catch(err => console.log(err));
+    props.onSubmit();
   }
 
   const handleEmailChange = (e) => {
-    setEmail(e.target.value);
+    props.setUserEmail(e.target.value);
   }
 
   const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
+    props.setPassword(e.target.value);
   }
 
   return (
@@ -48,7 +53,7 @@ function Login (props) {
             type="email"
             className="login__form-input"
             onChange={handleEmailChange}
-            value={email}
+            value={props.userEmail}
           >
           </input>
           <label className="login__input-lable">Пароль</label>
@@ -56,13 +61,14 @@ function Login (props) {
             type="password"
             className="login__form-input"
             onChange={handlePasswordChange}
-            value={password}
+            value={props.password}
           >
           </input>
         </fieldset>
         <button
           className="login__submit-btn"
           type="submit"
+          disabled={!props.isValid}
         >
           Войти
         </button>
