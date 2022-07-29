@@ -1,35 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { validate } from 'react-email-validator';
-
-
 import './Register.css';
 import Logo from '../Logo/Logo';
 
 function Register (props) {
 
-  React.useEffect(() => {
-    props.setIsValid(false);
-    return () => {
-      props.setUserName('');
-      props.setUserEmail('');
-      props.setPassword('');
-    }
-  }, []);
-
-  React.useEffect(() => {
-    checkFormValidity();
-  }, [props.password, props.userEmail, props.userName]);
-
-  const checkFormValidity = () => {
-    const isEmailValid = validate(props.userEmail) && props.userEmail.length > 0;
-    const isUserNameValid = props.userName.length > 0;
-    const isPasswordValid = props.password.length > 5;
-    isEmailValid && isUserNameValid && isPasswordValid ?
-    props.setIsValid(true)
-    :
-    props.setIsValid(false)
-  }
+  const { userEmail, userName, password } = props.formValues;
+  const isUserNameInvalid = Object.values(props.errors.userName).some(Boolean);
+  const isUserEmailInvalid = Object.values(props.errors.userEmail).some(Boolean);
+  const isPasswordInvalid = Object.values(props.errors.password).some(Boolean);
+  const isSubmitDisabled = isUserNameInvalid || isUserEmailInvalid || isPasswordInvalid
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -37,15 +17,15 @@ function Register (props) {
   }
 
   const handleNameChange = (e) => {
-    props.setUserName(e.target.value);
+    props.onInputChange(e);
   }
 
   const handleEmailChange = (e) => {
-    props.setUserEmail(e.target.value);
+    props.onInputChange(e);
   }
 
   const handlePasswordChange = (e) => {
-    props.setPassword(e.target.value);
+    props.onInputChange(e);
   }
 
   return(
@@ -57,35 +37,59 @@ function Register (props) {
         <label className="register__input-lable">Имя</label>
           <input
             type="text"
+            name="userName"
             className="register__form-input"
             onChange={handleNameChange}
-            value={props.userName}
+            value={userName}
             required
           >
           </input>
+          {
+            props.errors.userName.required &&
+              <p className="register__input-error-message">Не указано имя</p>
+          }
+          {
+            props.errors.userName.format &&
+              <p className="register__input-error-message">Имя может содержать только латиницу, кириллицу, дефис или пробел</p>
+          }
           <label className="register__input-lable">E-mail</label>
           <input
             type="email"
+            name="userEmail"
             className="register__form-input"
             onChange={handleEmailChange}
-            value={props.userEmail}
+            value={userEmail}
             required
           >
           </input>
+          {
+            props.errors.userEmail.required &&
+              <p className="register__input-error-message">Не указан email</p>
+          }
+          {
+            props.errors.userEmail.isEmail &&
+              <p className="register__input-error-message">Значение не является адресом email</p>
+          }
           <label className="register__input-lable">Пароль</label>
           <input
             type="password"
+            name="password"
             className="register__form-input"
             onChange={handlePasswordChange}
-            value={props.password}
+            value={password}
             required
           >
           </input>
+          {
+            props.errors.password.required &&
+              <p className="register__input-error-message">Не указан пароль</p>
+          }
         </fieldset>
+        <p className="register__error-message">{ props.resErrorMessage }</p>
         <button
           className="register__submit-btn"
           type="submit"
-          disabled={!props.isValid}
+          disabled={isSubmitDisabled}
         >
           Зарегистрироваться
         </button>

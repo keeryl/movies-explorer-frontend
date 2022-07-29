@@ -28,7 +28,7 @@ function SearchForm (props) {
           required
         >
         </input>
-        <button className="search-form__button"></button>
+        <button className="search-form__button" type="submit" disabled={!props.isValid}></button>
       </fieldset>
       <fieldset className="search-form__checkbox-field">
         <div

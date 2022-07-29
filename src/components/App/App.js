@@ -1,5 +1,5 @@
 import './App.css';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate, Route, Routes } from 'react-router-dom';
 
 import Header from '../Header/Header.js';
@@ -14,19 +14,26 @@ import SavedMovies from '../SavedMovies/SavedMovies';
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 import CurrentUserContext from '../../contexts/CurrentUserContext';
 import mainApi from '../../utils/MainApi';
+import useFormWithValidation from '../../hooks/useFormWithValidation';
 
 function App() {
 
+  const [
+    formValues,
+    setFormValues,
+    errors,
+    handleInputChange,
+    resetForm ] = useFormWithValidation();
+
   const location = useLocation();
-  const [loggedIn, setLoggedIn] = React.useState(false);
-  const [currentUser, setCurrentUser] = React.useState({});
-  const [userName, setUserName] = React.useState('');
-  const [userEmail, setUserEmail] = React.useState('');
-  const [password, setPassword] = React.useState('');
-  const [isValid, setIsValid] = React.useState(true);
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [currentUser, setCurrentUser] = useState({});
+  const [resErrorMessage, setResErrorMessage] = useState('');
+  const [isSearchRequestValid, setIsSearchRequestValid] = useState(true);
+  const { userName, userEmail, password } = formValues;
   const navigate = useNavigate();
 
-  React.useEffect(() => {
+  useEffect(() => {
     tokenCheck();
   }, []);
 
@@ -36,10 +43,13 @@ function App() {
       mainApi.getCurrentUser(token)
         .then(res => {
           if (res) {
-            // console.log(res);
+            console.log(res);
             setCurrentUser(res.user);
-            setUserName(res.user.name);
-            setUserEmail(res.user.email);
+            setFormValues((prevState) => ({
+              ...prevState,
+              userName: res.user.name,
+              userEmail: res.user.email
+            }));
             setLoggedIn(true);
             navigate('/movies', { replace: true });
           }
@@ -51,26 +61,27 @@ function App() {
   }
 
   const handleRegistrationSubmit = () => {
-    setIsValid(false);
     mainApi.signup(userEmail, password, userName)
     .then(res => {
       if(res) {
-        console.log(res.user.email);
-        setUserEmail(res.user.email);
+        setFormValues((prevState) => ({
+          ...prevState,
+          userName: '',
+          userEmail: res.user.email,
+          password: ''
+        }));
         navigate('/signin', { replace: true });
-        setIsValid(true);
-        setPassword('');
-        setUserName('');
       }
     })
     .catch(err => {
       console.log(err);
-      setIsValid(true);
+        // Пользователь с таким email уже существует.
+        // При регистрации пользователя произошла ошибка.
     });
   }
 
   const handleLoginSubmit = () => {
-    setIsValid(false);
+    setResErrorMessage('');
     mainApi.signin(password, userEmail)
     .then(res => {
       if(res) {
@@ -78,13 +89,17 @@ function App() {
         localStorage.setItem('token', res.token);
         navigate('/movies', { replace: true });
         tokenCheck();
-        setPassword('');
-        setIsValid(true);
       }
     })
     .catch(err => {
       console.log(err);
-      setIsValid(true);
+      if (err = 'Ошибка: 401') {
+        setResErrorMessage('Вы ввели неправильный логин или пароль.');
+      } else {
+        setResErrorMessage('Произошла ошибка на сервере');
+      }
+      // При авторизации произошла ошибка. Токен не передан или передан не в том формате.
+      // При авторизации произошла ошибка. Переданный токен некорректен.
     });
   }
 
@@ -92,22 +107,38 @@ function App() {
     localStorage.removeItem('token');
     setLoggedIn(false);
     setCurrentUser({});
+    setFormValues({
+      userName: '',
+      userEmail: '',
+      password: ''
+    });
+
     navigate('/', { replace: true });
   }
 
   const handleUpdateUserSubmit = () => {
+    setResErrorMessage('');
     const token = localStorage.getItem('token');
-    setIsValid(false);
     mainApi.updateUserProfile(token, userEmail, userName)
       .then(res => {
         if(res) {
           setCurrentUser(res.user);
-          setIsValid(true);
+          setFormValues((prevState) => ({
+            ...prevState,
+            userName: res.user.name,
+            userEmail: res.user.email
+          }));
         }
       })
       .catch(err => {
+        console.log(err.statusCode);
+        console.log(err.message);
         console.log(err);
-        setIsValid(true);
+        if (err = 'Ошибка: 409') {
+          setResErrorMessage('Пользователь с таким email уже существует.');
+        } else {
+          setResErrorMessage('При обновлении профиля произошла ошибка.');
+        }
       });
   }
 
@@ -130,12 +161,10 @@ function App() {
             element={
               <Login
                 onSubmit={handleLoginSubmit}
-                userEmail={userEmail}
-                password={password}
-                setUserEmail={setUserEmail}
-                setPassword={setPassword}
-                isValid={isValid}
-                setIsValid={setIsValid}
+                formValues={formValues}
+                onInputChange={handleInputChange}
+                errors={errors}
+                resErrorMessage={resErrorMessage}
               />
             }
           />
@@ -144,14 +173,10 @@ function App() {
             element={
               <Register
                 onSubmit={handleRegistrationSubmit}
-                userName={userName}
-                userEmail={userEmail}
-                password={password}
-                setUserName={setUserName}
-                setUserEmail={setUserEmail}
-                setPassword={setPassword}
-                isValid={isValid}
-                setIsValid={setIsValid}
+                formValues={formValues}
+                onInputChange={handleInputChange}
+                errors={errors}
+                resErrorMessage={resErrorMessage}
               />
             }
           />
@@ -161,23 +186,35 @@ function App() {
               <ProtectedRoute
                 loggedIn={loggedIn}
                 onSubmit={handleUpdateUserSubmit}
-                userName={userName}
-                userEmail={userEmail}
-                setUserName={setUserName}
-                setUserEmail={setUserEmail}
-                isValid={isValid}
-                setIsValid={setIsValid}
+                formValues={formValues}
+                onInputChange={handleInputChange}
+                errors={errors}
+                resErrorMessage={resErrorMessage}
                 onLogOut={handleLogout}
                 component={Profile}/>
             }
           />
           <Route
             path="/movies"
-            element={<ProtectedRoute loggedIn={loggedIn} component={Movies}/>}
+            element={
+              <ProtectedRoute
+                loggedIn={loggedIn}
+                isSearchRequestValid={isSearchRequestValid}
+                setIsSearchRequestValid={setIsSearchRequestValid}
+                component={Movies}
+              />
+            }
           />
           <Route
             path="/saved-movies"
-            element={<ProtectedRoute loggedIn={loggedIn} component={SavedMovies}/>}
+            element={
+              <ProtectedRoute
+                loggedIn={loggedIn}
+                isSearchRequestValid={isSearchRequestValid}
+                setIsSearchRequestValid={setIsSearchRequestValid}
+                component={SavedMovies}
+              />
+            }
           />
           <Route
             path="*"

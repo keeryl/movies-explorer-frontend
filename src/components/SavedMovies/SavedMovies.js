@@ -1,5 +1,5 @@
 import './SavedMovies.css';
-import React from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 
 import SearchForm from '../SearchForm/SearchForm';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
@@ -7,19 +7,31 @@ import mainApi from '../../utils/MainApi';
 import CurrentUserContext from '../../contexts/CurrentUserContext';
 import Preloader  from '../Preloader/Preloader';
 
-function SavedMovies () {
+function SavedMovies (props) {
 
-  const currentUser = React.useContext(CurrentUserContext);
-  const [savedMovies, setSavedMovies] = React.useState([]);
-  const [isChecked, setIsChecked] = React.useState(false);
-  const [searchRequest, setSearchRequest] = React.useState('');
-  const [isLoading, setIsLoading] = React.useState(false);
+  const currentUser = useContext(CurrentUserContext);
+  const [savedMovies, setSavedMovies] = useState([]);
+  const [isChecked, setIsChecked] = useState(false);
+  const [searchRequest, setSearchRequest] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (searchRequest === '') {
       getSavedMovies();
     }
   },[searchRequest]);
+
+  // const checkFormValidity = () => {
+  //   const isRequestValid = searchRequest.length > 0;
+  //   isRequestValid && savedMovies.length > 0 ?
+  //   props.setIsValid(true)
+  //   :
+  //   props.setIsValid(false)
+  // }
+
+  // React.useEffect(() => {
+  //   checkFormValidity();
+  // },[searchRequest]);
 
   const filterMovies = (unfilteredMovies) => {
     return unfilteredMovies.filter(movie => {
@@ -74,6 +86,7 @@ function SavedMovies () {
           searchRequest={searchRequest}
           setSearchRequest={setSearchRequest}
           setIsChecked={setIsChecked}
+          isValid={props.isValid}
         />
       </section>
       <section className="saved-movies__items">

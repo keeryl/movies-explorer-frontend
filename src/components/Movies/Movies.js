@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import './Movies.css';
 
 import SearchForm from '../SearchForm/SearchForm';
@@ -8,7 +8,7 @@ import mainApi from '../../utils/MainApi';
 import CurrentUserContext from '../../contexts/CurrentUserContext';
 import Preloader  from '../Preloader/Preloader';
 
-function Movies () {
+function Movies (props) {
 
   const filterMovies = (unfilteredMovies) => {
     const localStorageItem = localStorage.getItem(currentUser._id);
@@ -23,11 +23,11 @@ function Movies () {
     });
   }
 
-  const currentUser = React.useContext(CurrentUserContext);
-  const [savedMovies, setSavedMovies] = React.useState([]);
-  const [isChecked, setIsChecked] = React.useState(true);
-  const [searchRequest, setSearchRequest] = React.useState('');
-  const [filteredMovies, setFilteredMovies] = React.useState(() => {
+  const currentUser = useContext(CurrentUserContext);
+  const [savedMovies, setSavedMovies] = useState([]);
+  const [isChecked, setIsChecked] = useState(true);
+  const [searchRequest, setSearchRequest] = useState('');
+  const [filteredMovies, setFilteredMovies] = useState(() => {
     if (localStorage.getItem(currentUser._id) !== null) {
       const localStorageItem = localStorage.getItem(currentUser._id);
       const localStorageMovies = JSON.parse(localStorageItem).movies;
@@ -37,10 +37,10 @@ function Movies () {
       return [];
     }
   });
-  const [isLoading, setIsLoading] = React.useState(false);
-  const [renderedMovies, setRenderedMovies] = React.useState([]);
-  const [windowWidth, setWindowWidth] = React.useState(window.innerWidth);
-  const [numToRender, setNumToRender] = React.useState(() => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [renderedMovies, setRenderedMovies] = useState([]);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [numToRender, setNumToRender] = useState(() => {
     if (windowWidth >= 1280) {
       return 12;
     }
@@ -55,7 +55,7 @@ function Movies () {
     }
   });
 
-  React.useEffect(() => {
+  useEffect(() => {
     const localStorageItem = localStorage.getItem(currentUser._id);
     if (localStorage.getItem(currentUser._id) !== null) {
       setSearchRequest(JSON.parse(localStorageItem).request);
@@ -63,22 +63,32 @@ function Movies () {
     }
   },[]);
 
-  React.useEffect(() => {
-    window.addEventListener("resize",
-      function () {setTimeout(updateWindowWidth, 1000)}
-    );
-    return () => window.removeEventListener("resize",
-      function () {setTimeout(updateWindowWidth, 1000)}
-    );
-  });
+  useEffect(() => {
+    window.addEventListener("resize", updateWindowWidth);
+    return () => window.removeEventListener("resize", updateWindowWidth);
+  }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     renderMovies();
   },[filteredMovies]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     getSavedMovies();
   },[]);
+
+  // const checkFormValidity = () => {
+  //   const localStorageItem = localStorage.getItem(currentUser._id);
+  //   const previousSearchRequest = JSON.parse(localStorageItem).request
+  //   const isSearchRequestValid = searchRequest.length > 0 && searchRequest !== previousSearchRequest;
+  //   isSearchRequestValid ?
+  //   props.setIsSearchRequestValid(true)
+  //   :
+  //   props.setIsSearchRequestValid(false)
+  // }
+
+  // useEffect(() => {
+  //   checkFormValidity();
+  // },[searchRequest]);
 
   const countCardsToRender = () => {
     if (windowWidth >= 1280) {
@@ -96,7 +106,7 @@ function Movies () {
   }
 
   const updateWindowWidth = () => {
-    setWindowWidth(window.innerWidth);
+    setTimeout(() => setWindowWidth(window.innerWidth), 1000);
   }
 
   const getSavedMovies = () => {
@@ -114,6 +124,7 @@ function Movies () {
 
   const handleSearchSubmit = () => {
     setRenderedMovies([]);
+    props.setIsValid(false);
     setIsLoading(true);
     moviesApi.getMovies()
     .then(res => {
@@ -167,7 +178,7 @@ function Movies () {
       setRenderedMovies([...renderedMovies, ...moviesToRender]);
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     countCardsToRender();
   }, [windowWidth, renderedMovies]);
 
@@ -177,9 +188,10 @@ function Movies () {
         <SearchForm
           onSearchRequest={handleSearchSubmit}
           isChecked={isChecked}
-          searchRequest={searchRequest}
           setIsChecked={setIsChecked}
+          searchRequest={searchRequest}
           setSearchRequest={setSearchRequest}
+          isValid={props.isValid}
         />
       </section>
       <section className="movies__items">

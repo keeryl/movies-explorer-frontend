@@ -1,33 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { validate } from 'react-email-validator';
-
 import './Login.css';
 import Logo from '../Logo/Logo';
 
 function Login (props) {
 
-  React.useEffect(() => {
-    console.log(props.userEmail);
-    props.setIsValid(false);
-    props.setUserEmail(props.userEmail);
-    return () => {
-      props.setUserEmail('');
-    }
-  }, []);
-
-  React.useEffect(() => {
-    checkFormValidity();
-  }, [props.password, props.userEmail]);
-
-  const checkFormValidity = () => {
-    const isEmailValid = validate(props.userEmail) && props.userEmail.length > 0;
-    const isPasswordValid = props.password.length > 5;
-    isEmailValid && isPasswordValid ?
-    props.setIsValid(true)
-    :
-    props.setIsValid(false)
-  }
+  const { userEmail, password } = props.formValues;
+  const isUserEmailInvalid = Object.values(props.errors.userEmail).some(Boolean);
+  const isPasswordInvalid = Object.values(props.errors.password).some(Boolean);
+  const isSubmitDisabled = isUserEmailInvalid || isPasswordInvalid
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -35,11 +16,11 @@ function Login (props) {
   }
 
   const handleEmailChange = (e) => {
-    props.setUserEmail(e.target.value);
+    props.onInputChange(e);
   }
 
   const handlePasswordChange = (e) => {
-    props.setPassword(e.target.value);
+    props.onInputChange(e);
   }
 
   return (
@@ -53,22 +34,37 @@ function Login (props) {
             type="email"
             className="login__form-input"
             onChange={handleEmailChange}
-            value={props.userEmail}
+            value={userEmail}
+            name="userEmail"
           >
           </input>
+          {
+            props.errors.userEmail.required &&
+              <p className="register__input-error-message">Не указан email</p>
+          }
+          {
+            props.errors.userEmail.isEmail &&
+              <p className="register__input-error-message">Значение не является адресом email</p>
+          }
           <label className="login__input-lable">Пароль</label>
           <input
             type="password"
             className="login__form-input"
             onChange={handlePasswordChange}
-            value={props.password}
+            value={password}
+            name="password"
           >
           </input>
+          {
+            props.errors.password.required &&
+              <p className="register__input-error-message">Не указан пароль</p>
+          }
         </fieldset>
+        <p className="login__error-message">{ props.resErrorMessage }</p>
         <button
           className="login__submit-btn"
           type="submit"
-          disabled={!props.isValid}
+          disabled={isSubmitDisabled}
         >
           Войти
         </button>
