@@ -7,6 +7,7 @@ import moviesApi from '../../utils/MoviesApi';
 import mainApi from '../../utils/MainApi';
 import CurrentUserContext from '../../contexts/CurrentUserContext';
 import Preloader  from '../Preloader/Preloader';
+import searchRequestError from '../../utils/constants';
 
 function Movies (props) {
 
@@ -25,7 +26,7 @@ function Movies (props) {
 
   const currentUser = useContext(CurrentUserContext);
   const [savedMovies, setSavedMovies] = useState([]);
-  const [isChecked, setIsChecked] = useState(true);
+  const [isChecked, setIsChecked] = useState(false);
   const [searchRequest, setSearchRequest] = useState('');
   const [filteredMovies, setFilteredMovies] = useState(() => {
     if (localStorage.getItem(currentUser._id) !== null) {
@@ -39,6 +40,7 @@ function Movies (props) {
   });
   const [isLoading, setIsLoading] = useState(false);
   const [renderedMovies, setRenderedMovies] = useState([]);
+  const [error, setError] = useState('');
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [numToRender, setNumToRender] = useState(() => {
     if (windowWidth >= 1280) {
@@ -76,19 +78,27 @@ function Movies (props) {
     getSavedMovies();
   },[]);
 
-  // const checkFormValidity = () => {
-  //   const localStorageItem = localStorage.getItem(currentUser._id);
-  //   const previousSearchRequest = JSON.parse(localStorageItem).request
-  //   const isSearchRequestValid = searchRequest.length > 0 && searchRequest !== previousSearchRequest;
-  //   isSearchRequestValid ?
-  //   props.setIsSearchRequestValid(true)
-  //   :
-  //   props.setIsSearchRequestValid(false)
-  // }
+  const checkFormValidity = () => {
+    if (localStorage.getItem(currentUser._id) !== null) {
+      const localStorageItem = localStorage.getItem(currentUser._id);
+      const previousSearchRequest = JSON.parse(localStorageItem).request;
+      const previousIsChecked = JSON.parse(localStorageItem).checkBox;
+      const isSearchRequestValid =
+        searchRequest.length > 0 &&
+        searchRequest !== previousSearchRequest ||
+        isChecked !== previousIsChecked;
+      isSearchRequestValid ?
+      props.setIsSearchRequestValid(true)
+      :
+      props.setIsSearchRequestValid(false)
+    } else {
+      return;
+    }
+  }
 
-  // useEffect(() => {
-  //   checkFormValidity();
-  // },[searchRequest]);
+  useEffect(() => {
+    checkFormValidity();
+  },[searchRequest, isChecked]);
 
   const countCardsToRender = () => {
     if (windowWidth >= 1280) {
@@ -123,8 +133,9 @@ function Movies (props) {
   }
 
   const handleSearchSubmit = () => {
+    setError('');
     setRenderedMovies([]);
-    props.setIsValid(false);
+    props.setIsSearchRequestValid(false);
     setIsLoading(true);
     moviesApi.getMovies()
     .then(res => {
@@ -142,6 +153,7 @@ function Movies (props) {
     .catch(err => {
       setIsLoading(false);
       console.log(err);
+      setError(searchRequestError);
     });
   }
 
@@ -149,6 +161,7 @@ function Movies (props) {
     const isLiked = savedMovies.some(m => m.movieId === movie.id);
     const movieToDelete = savedMovies.find(m => m.movieId === movie.id)
     const token = localStorage.getItem('token');
+    setError('');
     if (!isLiked) {
       mainApi.saveMovie(token, movie)
       .then(res => {
@@ -168,6 +181,7 @@ function Movies (props) {
       })
       .catch(err => {
         console.log(err);
+        setError(searchRequestError);
       });
     }
   }
@@ -191,8 +205,9 @@ function Movies (props) {
           setIsChecked={setIsChecked}
           searchRequest={searchRequest}
           setSearchRequest={setSearchRequest}
-          isValid={props.isValid}
+          isValid={props.isSearchRequestValid}
         />
+        <p className="movies__error-message">{error}</p>
       </section>
       <section className="movies__items">
         {

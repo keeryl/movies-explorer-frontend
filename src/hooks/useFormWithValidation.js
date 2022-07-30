@@ -109,7 +109,7 @@ const useFormWithValidation = () => {
     });
   }
 
-  return [ formValues, setFormValues, errors, handleInputChange, resetForm ]
+  return [ formValues, setFormValues, errors, handleInputChange, resetForm ];
 
 }
 

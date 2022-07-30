@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './Login.css';
 import Logo from '../Logo/Logo';
@@ -9,6 +9,13 @@ function Login (props) {
   const isUserEmailInvalid = Object.values(props.errors.userEmail).some(Boolean);
   const isPasswordInvalid = Object.values(props.errors.password).some(Boolean);
   const isSubmitDisabled = isUserEmailInvalid || isPasswordInvalid
+
+  useEffect(() => {
+    console.log('Login component rendered');
+    return () => {
+      props.resetForm();
+    }
+  },[]);
 
   const handleSubmit = (e) => {
     e.preventDefault();

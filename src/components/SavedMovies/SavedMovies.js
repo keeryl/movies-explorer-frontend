@@ -21,17 +21,17 @@ function SavedMovies (props) {
     }
   },[searchRequest]);
 
-  // const checkFormValidity = () => {
-  //   const isRequestValid = searchRequest.length > 0;
-  //   isRequestValid && savedMovies.length > 0 ?
-  //   props.setIsValid(true)
-  //   :
-  //   props.setIsValid(false)
-  // }
+  const checkFormValidity = () => {
+    const isRequestValid = searchRequest.length > 0;
+    isRequestValid && savedMovies.length > 0 ?
+    props.setIsSearchRequestValid(true)
+    :
+    props.setIsSearchRequestValid(false)
+  }
 
-  // React.useEffect(() => {
-  //   checkFormValidity();
-  // },[searchRequest]);
+  React.useEffect(() => {
+    checkFormValidity();
+  },[searchRequest]);
 
   const filterMovies = (unfilteredMovies) => {
     return unfilteredMovies.filter(movie => {
@@ -86,7 +86,7 @@ function SavedMovies (props) {
           searchRequest={searchRequest}
           setSearchRequest={setSearchRequest}
           setIsChecked={setIsChecked}
-          isValid={props.isValid}
+          isValid={props.isSearchRequestValid}
         />
       </section>
       <section className="saved-movies__items">

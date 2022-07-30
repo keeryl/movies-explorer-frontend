@@ -18,20 +18,14 @@ import useFormWithValidation from '../../hooks/useFormWithValidation';
 
 function App() {
 
-  const [
-    formValues,
-    setFormValues,
-    errors,
-    handleInputChange,
-    resetForm ] = useFormWithValidation();
-
-  const location = useLocation();
+  const [formValues, setFormValues, errors, handleInputChange, resetForm] = useFormWithValidation();
   const [loggedIn, setLoggedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState({});
   const [resErrorMessage, setResErrorMessage] = useState('');
   const [isSearchRequestValid, setIsSearchRequestValid] = useState(true);
-  const { userName, userEmail, password } = formValues;
+  const location = useLocation();
   const navigate = useNavigate();
+  const { userName, userEmail, password } = formValues;
 
   useEffect(() => {
     tokenCheck();
@@ -43,7 +37,6 @@ function App() {
       mainApi.getCurrentUser(token)
         .then(res => {
           if (res) {
-            console.log(res);
             setCurrentUser(res.user);
             setFormValues((prevState) => ({
               ...prevState,
@@ -75,8 +68,11 @@ function App() {
     })
     .catch(err => {
       console.log(err);
-        // Пользователь с таким email уже существует.
-        // При регистрации пользователя произошла ошибка.
+      if (err = 'Ошибка: 409') {
+        setResErrorMessage('Пользователь с таким email уже существует.');
+      } else {
+        setResErrorMessage('При регистрации пользователя произошла ошибка.');
+      }
     });
   }
 
@@ -131,9 +127,6 @@ function App() {
         }
       })
       .catch(err => {
-        console.log(err.statusCode);
-        console.log(err.message);
-        console.log(err);
         if (err = 'Ошибка: 409') {
           setResErrorMessage('Пользователь с таким email уже существует.');
         } else {
@@ -165,6 +158,7 @@ function App() {
                 onInputChange={handleInputChange}
                 errors={errors}
                 resErrorMessage={resErrorMessage}
+                resetForm={resetForm}
               />
             }
           />
@@ -177,6 +171,7 @@ function App() {
                 onInputChange={handleInputChange}
                 errors={errors}
                 resErrorMessage={resErrorMessage}
+                resetForm={resetForm}
               />
             }
           />

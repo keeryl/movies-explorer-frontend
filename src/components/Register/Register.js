@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './Register.css';
 import Logo from '../Logo/Logo';
@@ -10,6 +10,13 @@ function Register (props) {
   const isUserEmailInvalid = Object.values(props.errors.userEmail).some(Boolean);
   const isPasswordInvalid = Object.values(props.errors.password).some(Boolean);
   const isSubmitDisabled = isUserNameInvalid || isUserEmailInvalid || isPasswordInvalid
+
+  useEffect(() => {
+    console.log('Register component rendered');
+    return () => {
+      props.resetForm();
+    }
+  },[]);
 
   const handleSubmit = (e) => {
     e.preventDefault();

@@ -12,11 +12,24 @@
   width: calc(100% - 140px);
   max-width: 1140px;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   border-bottom: 1px solid #E8E8E8;
   box-sizing: border-box;
   padding: 70px 0;
+}
+
+.movies__error-message {
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  color: #FF004C;
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 13px;
+  text-align: center;
+  padding: 15px 0;
 }
 
 .movies__items {
