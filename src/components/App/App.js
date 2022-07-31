@@ -159,6 +159,7 @@ function App() {
                 onInputChange={handleInputChange}
                 errors={errors}
                 resErrorMessage={resErrorMessage}
+                setResErrorMessage={setResErrorMessage}
                 resetForm={resetForm}
               />
             }
@@ -172,6 +173,7 @@ function App() {
                 onInputChange={handleInputChange}
                 errors={errors}
                 resErrorMessage={resErrorMessage}
+                setResErrorMessage={setResErrorMessage}
                 resetForm={resetForm}
               />
             }

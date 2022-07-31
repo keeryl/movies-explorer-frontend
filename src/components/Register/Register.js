@@ -12,7 +12,7 @@ function Register (props) {
   const isSubmitDisabled = isUserNameInvalid || isUserEmailInvalid || isPasswordInvalid
 
   useEffect(() => {
-    console.log('Register component rendered');
+    props.setResErrorMessage('');
     return () => {
       props.resetForm();
     }

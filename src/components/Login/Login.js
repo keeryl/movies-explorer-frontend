@@ -11,7 +11,7 @@ function Login (props) {
   const isSubmitDisabled = isUserEmailInvalid || isPasswordInvalid
 
   useEffect(() => {
-    console.log('Login component rendered');
+    props.setResErrorMessage('');
     return () => {
       props.resetForm();
     }
