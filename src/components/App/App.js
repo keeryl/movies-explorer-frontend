@@ -54,6 +54,7 @@ function App() {
   }
 
   const handleRegistrationSubmit = () => {
+    setResErrorMessage('');
     mainApi.signup(userEmail, password, userName)
     .then(res => {
       if(res) {
