@@ -58,35 +58,6 @@ const useFormWithValidation = () => {
 
   }
 
-  // const validateInputs = () => {
-
-  //   const userNameValidationRes = Object.keys(validators.userName).map(
-  //     errorKey => {
-  //       const errorResult = validators.userName[errorKey](userName);
-  //       return { [errorKey]: errorResult };
-  //     }
-  //   ).reduce((acc, el) => ({ ...acc, ...el }), {});
-  //   const userEmailValidationRes = Object.keys(validators.userEmail).map(
-  //     errorKey => {
-  //       const errorResult = validators.userEmail[errorKey](userEmail);
-  //       return { [errorKey]: errorResult };
-  //     }
-  //   ).reduce((acc, el) => ({ ...acc, ...el }), {});
-  //   const passwordValidationRes = Object.keys(validators.password).map(
-  //     errorKey => {
-  //       const errorResult = validators.password[errorKey](password);
-  //       return { [errorKey]: errorResult };
-  //     }
-  //   ).reduce((acc, el) => ({ ...acc, ...el }), {});
-  //   console.log(userNameValidationRes, userEmailValidationRes, passwordValidationRes)
-
-  //   setErrors({
-  //     userName: userNameValidationRes,
-  //     userEmail: userEmailValidationRes,
-  //     password: passwordValidationRes,
-  //   });
-  // }
-
   const resetForm = () => {
     setFormValues({
       userName: '',

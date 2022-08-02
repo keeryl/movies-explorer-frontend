@@ -1,5 +1,5 @@
 import './Profile.css';
-import React, { useContext} from 'react';
+import { useEffect, useContext} from 'react';
 import CurrentUserContext from '../../contexts/CurrentUserContext';
 
 function Profile (props) {
@@ -9,7 +9,17 @@ function Profile (props) {
   const isUserNameInvalid = Object.values(props.errors.userName).some(Boolean);
   const isUserEmailInvalid = Object.values(props.errors.userEmail).some(Boolean);
   const isUserDataNotDifferent = currentUser.name === userName && currentUser.email === userEmail;
-  const isSubmitDisabled = isUserNameInvalid || isUserEmailInvalid || isUserDataNotDifferent;
+  const isSubmitDisabled = isUserNameInvalid || isUserEmailInvalid || isUserDataNotDifferent || props.isApiRequesting;
+
+  useEffect(() => {
+    props.setIsApiRequesting(false);
+    props.setApiErrorMessage('');
+    props.setApiSuccessMessage('');
+    return () => {
+      props.setApiErrorMessage('');
+      props.setApiSuccessMessage('');
+    }
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -17,14 +27,20 @@ function Profile (props) {
   }
 
   const handleUserNameChange = (e) => {
+    props.setApiErrorMessage('');
+    props.setApiSuccessMessage('');
     props.onInputChange(e);
   }
 
   const handleUserEmailChange = (e) => {
+    props.setApiErrorMessage('');
+    props.setApiSuccessMessage('');
     props.onInputChange(e);
   }
 
   const handleLogOut = () => {
+    props.setApiErrorMessage('');
+    props.setApiSuccessMessage('');
     props.onLogOut();
   }
 
@@ -71,7 +87,8 @@ function Profile (props) {
           }
         </fieldset>
         <div className="profile__buttons">
-          <p className="profile__error-message">{ props.resErrorMessage }</p>
+          <p className="profile__error-message">{ props.apiErrorMessage }</p>
+          <p className="profile__success-message">{ props.apiSuccessMessage }</p>
           <button type="submit" disabled={isSubmitDisabled} className="profile__button profile__button_type_submit">
             Редактировать
           </button>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import './Movies.css';
 
 import SearchForm from '../SearchForm/SearchForm';
@@ -7,37 +7,21 @@ import moviesApi from '../../utils/MoviesApi';
 import mainApi from '../../utils/MainApi';
 import CurrentUserContext from '../../contexts/CurrentUserContext';
 import Preloader  from '../Preloader/Preloader';
-import searchRequestError from '../../utils/constants';
+import SEARCH_REQUEST_ERROR from '../../utils/constants';
 
 function Movies (props) {
-
-  const filterMovies = (unfilteredMovies) => {
-    const localStorageItem = localStorage.getItem(currentUser._id);
-    const checkBoxState = JSON.parse(localStorageItem).checkBox;
-    const request = JSON.parse(localStorageItem).request;
-    return unfilteredMovies.filter(movie => {
-      if (checkBoxState === true) {
-        return movie.duration <= 40 && movie.nameRU.includes(request);
-      } else {
-        return movie.nameRU.includes(request);
-      }
-    });
-  }
 
   const currentUser = useContext(CurrentUserContext);
   const [savedMovies, setSavedMovies] = useState([]);
   const [isChecked, setIsChecked] = useState(false);
-  const [searchRequest, setSearchRequest] = useState('');
-  const [filteredMovies, setFilteredMovies] = useState(() => {
+  const [searchRequest, setSearchRequest] = useState(() => {
     if (localStorage.getItem(currentUser._id) !== null) {
-      const localStorageItem = localStorage.getItem(currentUser._id);
-      const localStorageMovies = JSON.parse(localStorageItem).movies;
-      const movies = filterMovies(localStorageMovies);
-      return [...movies];
+      return JSON.parse(localStorage.getItem(currentUser._id)).request;
     } else {
-      return [];
+      return '';
     }
   });
+  const [filteredMovies, setFilteredMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [renderedMovies, setRenderedMovies] = useState([]);
   const [error, setError] = useState('');
@@ -58,12 +42,12 @@ function Movies (props) {
   });
 
   useEffect(() => {
-    const localStorageItem = localStorage.getItem(currentUser._id);
-    if (localStorage.getItem(currentUser._id) !== null) {
-      setSearchRequest(JSON.parse(localStorageItem).request);
-      setIsChecked(JSON.parse(localStorageItem).checkBox);
-    }
-  },[]);
+    countCardsToRender();
+  }, [windowWidth, renderedMovies]);
+
+  useEffect(() => {
+    checkFormValidity();
+  },[searchRequest]);
 
   useEffect(() => {
     window.addEventListener("resize", updateWindowWidth);
@@ -71,34 +55,62 @@ function Movies (props) {
   }, []);
 
   useEffect(() => {
+    getSavedMovies();
+  },[]);
+
+  useEffect(() => {
+    getFilteredMovies();
+  }, [isChecked]);
+
+  useEffect(() => {
     renderMovies();
   },[filteredMovies]);
 
-  useEffect(() => {
-    getSavedMovies();
-  },[]);
+   const handleCheckBoxClick = () => {
+    setIsChecked(!isChecked);
+    setRenderedMovies([]);
+  }
+
+  const filterMovies = (unfilteredMovies) => {
+    return unfilteredMovies.filter(movie => {
+      if (isChecked) {
+        return movie.duration <= 40 && movie.nameRU.toLowerCase().includes(searchRequest.toLowerCase());
+      } else {
+        return movie.nameRU.toLowerCase().includes(searchRequest.toLowerCase());
+      }
+    });
+  }
 
   const checkFormValidity = () => {
     if (localStorage.getItem(currentUser._id) !== null) {
       const localStorageItem = localStorage.getItem(currentUser._id);
       const previousSearchRequest = JSON.parse(localStorageItem).request;
-      const previousIsChecked = JSON.parse(localStorageItem).checkBox;
-      const isSearchRequestValid =
-        searchRequest.length > 0 &&
-        searchRequest !== previousSearchRequest ||
-        isChecked !== previousIsChecked;
+      const isSearchRequestValid = searchRequest.length > 0 && searchRequest !== previousSearchRequest;
       isSearchRequestValid ?
       props.setIsSearchRequestValid(true)
       :
       props.setIsSearchRequestValid(false)
     } else {
-      return;
+      const isSearchRequestValid = searchRequest.length > 0;
+      isSearchRequestValid ?
+      props.setIsSearchRequestValid(true)
+      :
+      props.setIsSearchRequestValid(false)    }
+  }
+
+  const getFilteredMovies = () => {
+    if (localStorage.getItem(currentUser._id) !== null) {
+      setFilteredMovies(() => {
+        return filterMovies(JSON.parse(localStorage.getItem(currentUser._id)).movies);
+      });
     }
   }
 
-  useEffect(() => {
-    checkFormValidity();
-  },[searchRequest, isChecked]);
+  const renderMovies = () => {
+    countCardsToRender();
+    const moviesToRender = filteredMovies.splice(0, numToRender);
+    setRenderedMovies([...renderedMovies, ...moviesToRender]);
+}
 
   const countCardsToRender = () => {
     if (windowWidth >= 1280) {
@@ -141,7 +153,6 @@ function Movies (props) {
     .then(res => {
       if(res) {
         localStorage.setItem(currentUser._id, JSON.stringify({
-          checkBox: isChecked,
           request: searchRequest,
           movies: res,
         }));
@@ -153,7 +164,7 @@ function Movies (props) {
     .catch(err => {
       setIsLoading(false);
       console.log(err);
-      setError(searchRequestError);
+      setError(SEARCH_REQUEST_ERROR);
     });
   }
 
@@ -181,20 +192,10 @@ function Movies (props) {
       })
       .catch(err => {
         console.log(err);
-        setError(searchRequestError);
+        setError(SEARCH_REQUEST_ERROR);
       });
     }
   }
-
-  const renderMovies = () => {
-      countCardsToRender();
-      const moviesToRender = filteredMovies.splice(0, numToRender);
-      setRenderedMovies([...renderedMovies, ...moviesToRender]);
-  }
-
-  useEffect(() => {
-    countCardsToRender();
-  }, [windowWidth, renderedMovies]);
 
   return(
     <main className="movies">
@@ -206,6 +207,7 @@ function Movies (props) {
           searchRequest={searchRequest}
           setSearchRequest={setSearchRequest}
           isValid={props.isSearchRequestValid}
+          onCheckBoxClick={handleCheckBoxClick}
         />
         <p className="movies__error-message">{error}</p>
       </section>

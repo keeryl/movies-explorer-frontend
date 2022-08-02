@@ -6,15 +6,16 @@ import Logo from '../Logo/Logo';
 function Login (props) {
 
   const { userEmail, password } = props.formValues;
-  const isUserEmailInvalid = Object.values(props.errors.userEmail).some(Boolean);
-  const isPasswordInvalid = Object.values(props.errors.password).some(Boolean);
-  const isSubmitDisabled = isUserEmailInvalid || isPasswordInvalid
+  const isUserEmailInvalid = Object.values(props.errors.userEmail).some(Boolean) || userEmail.length < 1;
+  const isPasswordInvalid = Object.values(props.errors.password).some(Boolean) || password.length < 1;
+  const isSubmitDisabled = isUserEmailInvalid || isPasswordInvalid || props.isApiRequesting;
 
   useEffect(() => {
-    props.setResErrorMessage('');
+    props.setApiErrorMessage('');
+    props.setApiSuccessMessage('');
     return () => {
-      props.resetForm();
-    }
+      props.setApiErrorMessage('');
+      props.setApiSuccessMessage('');    }
   },[]);
 
   const handleSubmit = (e) => {
@@ -67,7 +68,8 @@ function Login (props) {
               <p className="register__input-error-message">Не указан пароль</p>
           }
         </fieldset>
-        <p className="login__error-message">{ props.resErrorMessage }</p>
+        <p className="login__error-message">{ props.apiErrorMessage }</p>
+        <p className="login__success-message">{ props.apiSuccessMessage }</p>
         <button
           className="login__submit-btn"
           type="submit"

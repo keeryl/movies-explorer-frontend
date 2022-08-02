@@ -102,7 +102,7 @@ class MainApi {
         description: movieData.description === null ?
           'Значение отсутствует' : movieData.description,
         image: `https://api.nomoreparties.co${movieData.image.url}`,
-        trailerLink: movieData.trailerLink === null || typeof movieData.trailerLink === 'string' ?
+        trailerLink: movieData.trailerLink === null || typeof movieData.trailerLink !== 'string' ?
           'https://www.youtube.com' : movieData.trailerLink,
         thumbnail: `https://api.nomoreparties.co${movieData.image.url}`,
         movieId: movieData.id.toString(),

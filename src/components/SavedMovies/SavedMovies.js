@@ -1,5 +1,5 @@
 import './SavedMovies.css';
-import React, { useEffect, useState, useContext } from 'react';
+import { useEffect, useState, useContext } from 'react';
 
 import SearchForm from '../SearchForm/SearchForm';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
@@ -11,11 +11,15 @@ function SavedMovies (props) {
 
   const currentUser = useContext(CurrentUserContext);
   const [savedMovies, setSavedMovies] = useState([]);
+  const [filteredMovies, setFilteredMovies] =useState([]);
+  const [renderedMovies, setRenderedMovies] = useState([]);
   const [isChecked, setIsChecked] = useState(false);
   const [searchRequest, setSearchRequest] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    console.log(savedMovies);
+    checkFormValidity();
     if (searchRequest === '') {
       getSavedMovies();
     }
@@ -29,17 +33,31 @@ function SavedMovies (props) {
     props.setIsSearchRequestValid(false)
   }
 
-  React.useEffect(() => {
-    checkFormValidity();
-  },[searchRequest]);
+  useEffect(() => {
+    renderMovies();
+  },[filteredMovies]);
+
+  useEffect(() => {
+    getFilteredMovies();
+  },[savedMovies, isChecked]);
 
   const filterMovies = (unfilteredMovies) => {
     return unfilteredMovies.filter(movie => {
-      if (isChecked === true) {
-        return movie.duration <= 40 && movie.nameRU.includes(searchRequest);
+      if (isChecked) {
+        return movie.duration <= 40 && movie.nameRU.toLowerCase().includes(searchRequest.toLowerCase());
       } else {
-        return movie.nameRU.includes(searchRequest);
+        return movie.nameRU.toLowerCase().includes(searchRequest.toLowerCase());
       }
+    });
+  }
+
+  const renderMovies = () => {
+    setRenderedMovies(filteredMovies);
+  }
+
+  const getFilteredMovies = () => {
+    setFilteredMovies(() => {
+      return filterMovies(savedMovies);
     });
   }
 
@@ -59,6 +77,11 @@ function SavedMovies (props) {
       });
   }
 
+  const handleCheckBoxClick = () => {
+    setIsChecked(!isChecked);
+    getFilteredMovies();
+  }
+
   const handleLikeClick = (movie) => {
     const token = localStorage.getItem('token');
     mainApi.deleteMovie(token, movie._id)
@@ -73,8 +96,7 @@ function SavedMovies (props) {
   }
 
   const handleSearchSubmit = () => {
-    const filteredMovies = filterMovies(savedMovies);
-    setSavedMovies(filteredMovies);
+    getFilteredMovies();
   }
 
   return(
@@ -87,6 +109,7 @@ function SavedMovies (props) {
           setSearchRequest={setSearchRequest}
           setIsChecked={setIsChecked}
           isValid={props.isSearchRequestValid}
+          onCheckBoxClick={handleCheckBoxClick}
         />
       </section>
       <section className="saved-movies__items">
@@ -95,9 +118,9 @@ function SavedMovies (props) {
           <Preloader />
         }
         {
-          savedMovies.length !== 0 && !isLoading ?
+          renderedMovies.length !== 0 && !isLoading ?
             <MoviesCardList
-              movies={savedMovies}
+              movies={renderedMovies}
               onLikeClick={handleLikeClick}
               urlPrefix={''}
               savedMovies={savedMovies}

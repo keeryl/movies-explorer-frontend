@@ -4,7 +4,7 @@ import React from 'react';
 function SearchForm (props) {
 
   const handleCheckBox = () => {
-    props.setIsChecked(!props.isChecked);
+    props.onCheckBoxClick()
   }
 
   const handleSearchInput = (e) => {

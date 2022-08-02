@@ -19,16 +19,35 @@ import useFormWithValidation from '../../hooks/useFormWithValidation';
 function App() {
 
   const [formValues, setFormValues, errors, handleInputChange, resetForm] = useFormWithValidation();
-  const [loggedIn, setLoggedIn] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(() => {
+    if (localStorage.getItem('token') !== null) {
+      return mainApi.getCurrentUser(localStorage.getItem('token'))
+        .then(res => {
+          if (res) {
+            return true;
+          }
+        })
+        .catch(err => {
+          console.log(err);
+          return false;
+        });
+    } else {
+      return false;
+    }
+  });
   const [currentUser, setCurrentUser] = useState({});
-  const [resErrorMessage, setResErrorMessage] = useState('');
-  const [isSearchRequestValid, setIsSearchRequestValid] = useState(true);
+  const [apiSuccessMessage, setApiSuccessMessage] = useState('');
+  const [apiErrorMessage, setApiErrorMessage] = useState('');
+  const [isSearchRequestValid, setIsSearchRequestValid] = useState(false);
+  const [isApiRequesting, setIsApiRequesting] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const { userName, userEmail, password } = formValues;
 
   useEffect(() => {
-    tokenCheck();
+    if (localStorage.getItem('token') !== null) {
+      tokenCheck();
+    }
   }, []);
 
   const tokenCheck = () => {
@@ -37,63 +56,84 @@ function App() {
       mainApi.getCurrentUser(token)
         .then(res => {
           if (res) {
+            setLoggedIn(true);
             setCurrentUser(res.user);
             setFormValues((prevState) => ({
               ...prevState,
               userName: res.user.name,
               userEmail: res.user.email
             }));
-            setLoggedIn(true);
-            navigate('/movies', { replace: true });
           }
         })
         .catch(err => {
+          setLoggedIn(false);
           console.log(err);
         });
     }
   }
 
   const handleRegistrationSubmit = () => {
-    setResErrorMessage('');
+    setIsApiRequesting(true);
+    setApiErrorMessage('');
+    setApiSuccessMessage('');
     mainApi.signup(userEmail, password, userName)
     .then(res => {
       if(res) {
-        setFormValues((prevState) => ({
-          ...prevState,
-          userName: '',
-          userEmail: res.user.email,
-          password: ''
-        }));
-        navigate('/signin', { replace: true });
+        setApiSuccessMessage('Регистрация прошла успешно.');
+        setTimeout(() => handleLoginSubmit(), 2000);
       }
     })
     .catch(err => {
+      setIsApiRequesting(false);
       console.log(err);
       if (err = 'Ошибка: 409') {
-        setResErrorMessage('Пользователь с таким email уже существует.');
+        setApiErrorMessage('Пользователь с таким email уже существует.');
       } else {
-        setResErrorMessage('При регистрации пользователя произошла ошибка.');
+        setApiErrorMessage('При регистрации пользователя произошла ошибка.');
       }
     });
   }
 
   const handleLoginSubmit = () => {
-    setResErrorMessage('');
+    setIsApiRequesting(true);
+    setApiErrorMessage('');
+    setApiSuccessMessage('');
     mainApi.signin(password, userEmail)
     .then(res => {
       if(res) {
-        console.log(res);
         localStorage.setItem('token', res.token);
-        navigate('/movies', { replace: true });
-        tokenCheck();
+        return res.token
       }
+    })
+    .then((token) => {
+      mainApi.getCurrentUser(token)
+      .then(res => {
+        if (res) {
+          setApiSuccessMessage('Авторизация прошла успешно.');
+          setCurrentUser(res.user);
+          setFormValues((prevState) => ({
+            ...prevState,
+            userName: res.user.name,
+            userEmail: res.user.email
+          }));
+          setTimeout(() => {
+            setLoggedIn(true);
+            navigate('/movies', { replace: true });
+          }, 2000);
+        }
+      })
+      .catch(err => {
+        console.log(err);
+        return err;
+      });
     })
     .catch(err => {
       console.log(err);
+      setIsApiRequesting(false);
       if (err = 'Ошибка: 401') {
-        setResErrorMessage('Вы ввели неправильный логин или пароль.');
+        setApiErrorMessage('Вы ввели неправильный логин или пароль.');
       } else {
-        setResErrorMessage('Произошла ошибка на сервере');
+        setApiErrorMessage('Произошла ошибка на сервере');
       }
       // При авторизации произошла ошибка. Токен не передан или передан не в том формате.
       // При авторизации произошла ошибка. Переданный токен некорректен.
@@ -104,21 +144,23 @@ function App() {
     localStorage.removeItem('token');
     setLoggedIn(false);
     setCurrentUser({});
-    setFormValues({
-      userName: '',
-      userEmail: '',
-      password: ''
-    });
-
+    resetForm();
     navigate('/', { replace: true });
   }
 
   const handleUpdateUserSubmit = () => {
-    setResErrorMessage('');
+    setIsApiRequesting(true);
+    setApiErrorMessage('');
+    setApiSuccessMessage('');
     const token = localStorage.getItem('token');
     mainApi.updateUserProfile(token, userEmail, userName)
       .then(res => {
+        setIsApiRequesting(true);
+        return res;
+      })
+      .then(res => {
         if(res) {
+          setApiSuccessMessage('Данные аккаунта обновлены.');
           setCurrentUser(res.user);
           setFormValues((prevState) => ({
             ...prevState,
@@ -128,11 +170,20 @@ function App() {
         }
       })
       .catch(err => {
+        console.log(err);
+        setFormValues((prevState) => ({
+          ...prevState,
+          userName: currentUser.name,
+          userEmail: currentUser.email
+        }));
         if (err = 'Ошибка: 409') {
-          setResErrorMessage('Пользователь с таким email уже существует.');
+          setApiErrorMessage('Пользователь с таким email уже существует.');
         } else {
-          setResErrorMessage('При обновлении профиля произошла ошибка.');
+          setApiErrorMessage('При обновлении профиля произошла ошибка.');
         }
+      })
+      .finally(() => {
+        setIsApiRequesting(false);
       });
   }
 
@@ -140,15 +191,16 @@ function App() {
     <div className="App">
       <CurrentUserContext.Provider value={currentUser}>
         {
-          location.pathname !== '/signin' &&
-          location.pathname !== '/signup' &&
+          (location.pathname === '/movies' ||
+          location.pathname === '/saved-movies' ||
+          location.pathname === '/profile' ||
+          location.pathname === '/') &&
           <Header loggedIn={loggedIn}/>
         }
         <Routes>
           <Route
-            index
             path="/"
-            element={<Main />}
+            element={<Main/>}
           />
           <Route
             path="/signin"
@@ -158,9 +210,13 @@ function App() {
                 formValues={formValues}
                 onInputChange={handleInputChange}
                 errors={errors}
-                resErrorMessage={resErrorMessage}
-                setResErrorMessage={setResErrorMessage}
+                apiSuccessMessage={apiSuccessMessage}
+                setApiSuccessMessage={setApiSuccessMessage}
+                apiErrorMessage={apiErrorMessage}
+                setApiErrorMessage={setApiErrorMessage}
                 resetForm={resetForm}
+                isApiRequesting={isApiRequesting}
+                setIsApiRequesting={setIsApiRequesting}
               />
             }
           />
@@ -172,9 +228,13 @@ function App() {
                 formValues={formValues}
                 onInputChange={handleInputChange}
                 errors={errors}
-                resErrorMessage={resErrorMessage}
-                setResErrorMessage={setResErrorMessage}
+                apiSuccessMessage={apiSuccessMessage}
+                setApiSuccessMessage={setApiSuccessMessage}
+                apiErrorMessage={apiErrorMessage}
+                setApiErrorMessage={setApiErrorMessage}
                 resetForm={resetForm}
+                isApiRequesting={isApiRequesting}
+                setIsApiRequesting={setIsApiRequesting}
               />
             }
           />
@@ -187,7 +247,12 @@ function App() {
                 formValues={formValues}
                 onInputChange={handleInputChange}
                 errors={errors}
-                resErrorMessage={resErrorMessage}
+                apiSuccessMessage={apiSuccessMessage}
+                setApiSuccessMessage={setApiSuccessMessage}
+                apiErrorMessage={apiErrorMessage}
+                setApiErrorMessage={setApiErrorMessage}
+                isApiRequesting={isApiRequesting}
+                setIsApiRequesting={setIsApiRequesting}
                 onLogOut={handleLogout}
                 component={Profile}/>
             }
@@ -220,9 +285,9 @@ function App() {
           />
         </Routes>
         {
-          location.pathname !== '/profile' &&
-          location.pathname !== '/signin' &&
-          location.pathname !== '/signup' &&
+          (location.pathname === '/movies' ||
+          location.pathname === '/saved-movies' ||
+          location.pathname === '/') &&
           <Footer />
         }
       </CurrentUserContext.Provider>
