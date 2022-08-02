@@ -97,6 +97,13 @@
   border: none;
 }
 
+.search-form__button:disabled {
+  border: none;
+  opacity: 1;
+  cursor: default;
+  background-color: #EBEBEB;
+}
+
 .search-form__checkbox-field {
   border: 0;
   display: flex;
