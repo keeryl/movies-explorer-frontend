@@ -1,24 +1,38 @@
+import { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import './Login.css';
 import Logo from '../Logo/Logo';
 
-import React from 'react';
-import { Link } from 'react-router-dom';
+function Login (props) {
 
-function Login () {
+  const { userEmail, password } = props.formValues;
+  const isUserEmailInvalid = Object.values(props.errors.userEmail).some(Boolean) || userEmail.length < 1;
+  const isPasswordInvalid = Object.values(props.errors.password).some(Boolean) || password.length < 1;
+  const isSubmitDisabled = isUserEmailInvalid || isPasswordInvalid || props.isApiRequesting;
 
-  const [email, setEmail] = React.useState('');
-  const [password, setPassword] = React.useState('');
+  useEffect(() => {
+    props.resetForm();
+    props.setApiErrorMessage('');
+    props.setApiSuccessMessage('');
+    return () => {
+      props.setApiErrorMessage('');
+      props.setApiSuccessMessage('');
+    }
+  },[]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    props.onSubmit();
   }
 
   const handleEmailChange = (e) => {
-    setEmail(e.target.value);
+    props.onInputChange(e);
+    props.setApiErrorMessage('');
   }
 
   const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
+    props.onInputChange(e);
+    props.setApiErrorMessage('');
   }
 
   return (
@@ -32,21 +46,38 @@ function Login () {
             type="email"
             className="login__form-input"
             onChange={handleEmailChange}
-            value={email}
+            value={userEmail}
+            name="userEmail"
           >
           </input>
+          {
+            props.errors.userEmail.required &&
+              <p className="register__input-error-message">Не указан email</p>
+          }
+          {
+            props.errors.userEmail.isEmail &&
+              <p className="register__input-error-message">Значение не является адресом email</p>
+          }
           <label className="login__input-lable">Пароль</label>
           <input
             type="password"
             className="login__form-input"
             onChange={handlePasswordChange}
             value={password}
+            name="password"
           >
           </input>
+          {
+            props.errors.password.required &&
+              <p className="register__input-error-message">Не указан пароль</p>
+          }
         </fieldset>
+        <p className="login__error-message">{ props.apiErrorMessage }</p>
+        <p className="login__success-message">{ props.apiSuccessMessage }</p>
         <button
           className="login__submit-btn"
           type="submit"
+          disabled={isSubmitDisabled}
         >
           Войти
         </button>
