@@ -56,7 +56,9 @@ function Movies (props) {
 
   useEffect(() => {
     getSavedMovies();
-  },[]);
+    getFilteredMovies();
+    getSearchRequest();
+  },[currentUser]);
 
   useEffect(() => {
     getFilteredMovies();
@@ -69,6 +71,11 @@ function Movies (props) {
    const handleCheckBoxClick = () => {
     setIsChecked(!isChecked);
     setRenderedMovies([]);
+  }
+  const getSearchRequest = () => {
+    if (localStorage.getItem(currentUser._id) !== null) {
+      setSearchRequest(JSON.parse(localStorage.getItem(currentUser._id)).request);
+    }
   }
 
   const filterMovies = (unfilteredMovies) => {

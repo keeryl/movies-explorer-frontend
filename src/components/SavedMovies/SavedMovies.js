@@ -34,6 +34,10 @@ function SavedMovies (props) {
   }
 
   useEffect(() => {
+    getSavedMovies();
+  },[currentUser]);
+
+  useEffect(() => {
     renderMovies();
   },[filteredMovies]);
 
