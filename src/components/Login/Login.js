@@ -11,6 +11,7 @@ function Login (props) {
   const isSubmitDisabled = isUserEmailInvalid || isPasswordInvalid || props.isApiRequesting;
 
   useEffect(() => {
+    props.resetForm();
     props.setApiErrorMessage('');
     props.setApiSuccessMessage('');
     return () => {
@@ -26,10 +27,12 @@ function Login (props) {
 
   const handleEmailChange = (e) => {
     props.onInputChange(e);
+    props.setApiErrorMessage('');
   }
 
   const handlePasswordChange = (e) => {
     props.onInputChange(e);
+    props.setApiErrorMessage('');
   }
 
   return (

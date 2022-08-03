@@ -64,7 +64,6 @@ function Movies (props) {
   },[searchRequest, inputValue]);
 
   useEffect(() => {
-    console.log(filteredMovies)
     renderMovies();
   },[filteredMovies]);
 
@@ -155,6 +154,7 @@ function Movies (props) {
         }));
         setSearchRequest(inputValue);
         setIsLoading(false);
+        setLsMovies(res);
       }
     })
     .catch(err => {

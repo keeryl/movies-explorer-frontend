@@ -12,6 +12,7 @@ function Register (props) {
   const isSubmitDisabled = isUserNameInvalid || isUserEmailInvalid || isPasswordInvalid || props.isApiRequesting;
 
   useEffect(() => {
+    props.resetForm();
     props.setApiErrorMessage('');
     props.setApiSuccessMessage('');
     return () => {
@@ -27,14 +28,17 @@ function Register (props) {
 
   const handleNameChange = (e) => {
     props.onInputChange(e);
+    props.setApiErrorMessage('');
   }
 
   const handleEmailChange = (e) => {
     props.onInputChange(e);
+    props.setApiErrorMessage('');
   }
 
   const handlePasswordChange = (e) => {
     props.onInputChange(e);
+    props.setApiErrorMessage('');
   }
 
   return(

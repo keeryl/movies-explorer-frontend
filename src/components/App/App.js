@@ -51,8 +51,15 @@ function App() {
   }, []);
 
   useEffect(() => {
-    setApiErrorMessage('');
-  },[formValues]);
+    if (Object.keys(currentUser).length !== 0) {
+      setFormValues((prevState) => ({
+        ...prevState,
+        userName: currentUser.name,
+        userEmail: currentUser.email,
+        password: '',
+      }));
+    }
+  },[currentUser]);
 
   const tokenCheck = () => {
     const token = localStorage.getItem('token');
@@ -62,11 +69,6 @@ function App() {
           if (res) {
             setLoggedIn(true);
             setCurrentUser(res.user);
-            setFormValues((prevState) => ({
-              ...prevState,
-              userName: res.user.name,
-              userEmail: res.user.email
-            }));
           }
         })
         .catch(err => {
@@ -115,11 +117,6 @@ function App() {
         if (res) {
           setApiSuccessMessage('Авторизация прошла успешно.');
           setCurrentUser(res.user);
-          setFormValues((prevState) => ({
-            ...prevState,
-            userName: res.user.name,
-            userEmail: res.user.email
-          }));
           setTimeout(() => {
             setLoggedIn(true);
             navigate('/movies', { replace: true });
