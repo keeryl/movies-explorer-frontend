@@ -50,6 +50,10 @@ function App() {
     }
   }, []);
 
+  useEffect(() => {
+    setApiErrorMessage('');
+  },[formValues]);
+
   const tokenCheck = () => {
     const token = localStorage.getItem('token');
     if (token) {

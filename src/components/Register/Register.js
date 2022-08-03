@@ -16,15 +16,13 @@ function Register (props) {
     props.setApiSuccessMessage('');
     return () => {
       props.setApiErrorMessage('');
-      props.setApiSuccessMessage('');    }
+      props.setApiSuccessMessage('');
+    }
   },[]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     props.onSubmit();
-
-    console.log('props.isApiRequesting', props.isApiRequesting);
-    console.log('isSubmitDisabled', isSubmitDisabled);
   }
 
   const handleNameChange = (e) => {

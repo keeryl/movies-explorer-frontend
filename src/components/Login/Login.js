@@ -15,7 +15,8 @@ function Login (props) {
     props.setApiSuccessMessage('');
     return () => {
       props.setApiErrorMessage('');
-      props.setApiSuccessMessage('');    }
+      props.setApiSuccessMessage('');
+    }
   },[]);
 
   const handleSubmit = (e) => {
