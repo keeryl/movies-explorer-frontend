@@ -1,5 +1,4 @@
 import './SearchForm.css';
-import React from 'react';
 
 function SearchForm (props) {
 
@@ -8,7 +7,7 @@ function SearchForm (props) {
   }
 
   const handleSearchInput = (e) => {
-    props.setSearchRequest(e.target.value);
+    props.setInputValue(e.target.value);
   }
 
   const handleSearchFormSubmit = (e) => {
@@ -23,7 +22,7 @@ function SearchForm (props) {
         <input
           className="search-form__input"
           placeholder="Фильм"
-          value={props.searchRequest}
+          value={props.inputValue}
           onChange={handleSearchInput}
           required
         >

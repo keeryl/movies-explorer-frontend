@@ -15,23 +15,19 @@ function SavedMovies (props) {
   const [renderedMovies, setRenderedMovies] = useState([]);
   const [isChecked, setIsChecked] = useState(false);
   const [searchRequest, setSearchRequest] = useState('');
+  const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    console.log(savedMovies);
-    checkFormValidity();
-    if (searchRequest === '') {
+    if (inputValue === '') {
       getSavedMovies();
+      setSearchRequest('');
     }
-  },[searchRequest]);
+  },[inputValue]);
 
-  const checkFormValidity = () => {
-    const isRequestValid = searchRequest.length > 0;
-    isRequestValid && savedMovies.length > 0 ?
-    props.setIsSearchRequestValid(true)
-    :
-    props.setIsSearchRequestValid(false)
-  }
+  useEffect(() => {
+    checkFormValidity();
+  },[inputValue, searchRequest]);
 
   useEffect(() => {
     getSavedMovies();
@@ -43,7 +39,15 @@ function SavedMovies (props) {
 
   useEffect(() => {
     getFilteredMovies();
-  },[savedMovies, isChecked]);
+  },[savedMovies, isChecked, searchRequest]);
+
+  const checkFormValidity = () => {
+    const isRequestValid = inputValue.length > 0 && inputValue !== searchRequest;
+    isRequestValid && savedMovies.length > 0 ?
+    props.setIsSearchRequestValid(true)
+    :
+    props.setIsSearchRequestValid(false)
+  }
 
   const filterMovies = (unfilteredMovies) => {
     return unfilteredMovies.filter(movie => {
@@ -83,7 +87,6 @@ function SavedMovies (props) {
 
   const handleCheckBoxClick = () => {
     setIsChecked(!isChecked);
-    getFilteredMovies();
   }
 
   const handleLikeClick = (movie) => {
@@ -100,7 +103,7 @@ function SavedMovies (props) {
   }
 
   const handleSearchSubmit = () => {
-    getFilteredMovies();
+    setSearchRequest(inputValue);
   }
 
   return(
@@ -109,8 +112,8 @@ function SavedMovies (props) {
         <SearchForm
           onSearchRequest={handleSearchSubmit}
           isChecked={isChecked}
-          searchRequest={searchRequest}
-          setSearchRequest={setSearchRequest}
+          inputValue={inputValue}
+          setInputValue={setInputValue}
           setIsChecked={setIsChecked}
           isValid={props.isSearchRequestValid}
           onCheckBoxClick={handleCheckBoxClick}

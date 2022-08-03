@@ -14,13 +14,9 @@ function Movies (props) {
   const currentUser = useContext(CurrentUserContext);
   const [savedMovies, setSavedMovies] = useState([]);
   const [isChecked, setIsChecked] = useState(false);
-  const [searchRequest, setSearchRequest] = useState(() => {
-    if (localStorage.getItem(currentUser._id) !== null) {
-      return JSON.parse(localStorage.getItem(currentUser._id)).request;
-    } else {
-      return '';
-    }
-  });
+  const [searchRequest, setSearchRequest] = useState('');
+  const [inputValue, setInputValue] = useState('');
+  const [lsMovies, setLsMovies] = useState([]);
   const [filteredMovies, setFilteredMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [renderedMovies, setRenderedMovies] = useState([]);
@@ -46,7 +42,7 @@ function Movies (props) {
   }, [windowWidth, renderedMovies]);
 
   useEffect(() => {
-    checkFormValidity();
+    setInputValue(searchRequest);
   },[searchRequest]);
 
   useEffect(() => {
@@ -55,16 +51,20 @@ function Movies (props) {
   }, []);
 
   useEffect(() => {
+    getLocalStorageContent();
     getSavedMovies();
-    getFilteredMovies();
-    getSearchRequest();
   },[currentUser]);
 
   useEffect(() => {
     getFilteredMovies();
-  }, [isChecked]);
+  }, [isChecked, searchRequest, lsMovies]);
 
   useEffect(() => {
+    checkFormValidity();
+  },[searchRequest, inputValue]);
+
+  useEffect(() => {
+    console.log(filteredMovies)
     renderMovies();
   },[filteredMovies]);
 
@@ -72,9 +72,10 @@ function Movies (props) {
     setIsChecked(!isChecked);
     setRenderedMovies([]);
   }
-  const getSearchRequest = () => {
+  const getLocalStorageContent = () => {
     if (localStorage.getItem(currentUser._id) !== null) {
       setSearchRequest(JSON.parse(localStorage.getItem(currentUser._id)).request);
+      setLsMovies(JSON.parse(localStorage.getItem(currentUser._id)).movies);
     }
   }
 
@@ -89,28 +90,17 @@ function Movies (props) {
   }
 
   const checkFormValidity = () => {
-    if (localStorage.getItem(currentUser._id) !== null) {
-      const localStorageItem = localStorage.getItem(currentUser._id);
-      const previousSearchRequest = JSON.parse(localStorageItem).request;
-      const isSearchRequestValid = searchRequest.length > 0 && searchRequest !== previousSearchRequest;
+      const isSearchRequestValid = inputValue.length > 0 && searchRequest !== inputValue;
       isSearchRequestValid ?
       props.setIsSearchRequestValid(true)
       :
       props.setIsSearchRequestValid(false)
-    } else {
-      const isSearchRequestValid = searchRequest.length > 0;
-      isSearchRequestValid ?
-      props.setIsSearchRequestValid(true)
-      :
-      props.setIsSearchRequestValid(false)    }
   }
 
   const getFilteredMovies = () => {
-    if (localStorage.getItem(currentUser._id) !== null) {
       setFilteredMovies(() => {
-        return filterMovies(JSON.parse(localStorage.getItem(currentUser._id)).movies);
+        return filterMovies(lsMovies);
       });
-    }
   }
 
   const renderMovies = () => {
@@ -160,11 +150,10 @@ function Movies (props) {
     .then(res => {
       if(res) {
         localStorage.setItem(currentUser._id, JSON.stringify({
-          request: searchRequest,
+          request: inputValue,
           movies: res,
         }));
-        const movies = filterMovies(JSON.parse(localStorage.getItem(currentUser._id)).movies);
-        setFilteredMovies(movies);
+        setSearchRequest(inputValue);
         setIsLoading(false);
       }
     })
@@ -211,8 +200,8 @@ function Movies (props) {
           onSearchRequest={handleSearchSubmit}
           isChecked={isChecked}
           setIsChecked={setIsChecked}
-          searchRequest={searchRequest}
-          setSearchRequest={setSearchRequest}
+          inputValue={inputValue}
+          setInputValue={setInputValue}
           isValid={props.isSearchRequestValid}
           onCheckBoxClick={handleCheckBoxClick}
         />
