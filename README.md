@@ -1,6 +1,6 @@
 # movies-explorer-frontend
 
-##Описание:
+## Описание:
 
 keerzy.nomoredomains.work
 
