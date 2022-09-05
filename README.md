@@ -22,7 +22,25 @@ This is a frontend part of my diploma project. The interface layout was develope
 – React functional and class components
 
 
-## Getting started
+## Run Localy
+
+Clone the project
+
+```bash
+  git clone ____
+```
+
+Go to the project directory
+
+```bash
+  cd movies-explorer-frontend
+```
+
+Install dependencies
+
+```bash
+  npm install
+```
 
 Start project with
 ```bash
