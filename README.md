@@ -27,7 +27,7 @@ This is a frontend part of my diploma project. The interface layout was develope
 Clone the project
 
 ```bash
-  git clone ____
+  git clone https://github.com/keeryl/movies-explorer-frontend.git
 ```
 
 Go to the project directory
