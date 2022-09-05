@@ -22,7 +22,7 @@ This is a frontend part of my diploma project. The interface layout was develope
 – React functional and class components
 
 
-## Run Localy
+## Run Locally
 
 Clone the project
 
