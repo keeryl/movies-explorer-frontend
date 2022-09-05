@@ -11,12 +11,23 @@ This is a frontend part of my diploma project. The interface layout was develope
 
 ### Features
 
-– f
-– fgfg
+– Form validation with custom hook
+
+– Registration/Authorization 
+
+– React Router v6
+
+– Custom cards layout with CSS Grid
+
+– React functional and class components
+
 
 ### Getting started
 
-Start project with: npm run start
+Start project with
+```bash
+  npm run start
+```
 
 ### Live Demo
 
