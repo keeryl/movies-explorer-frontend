@@ -9,6 +9,10 @@
 
 This is a frontend part of my diploma project. The interface layout was developed according to given Figma design file. The project is developed using React functional and class components. The routing is made with React Router v6. Unauthorized user has access to my portfolio page. After registration and authorization the user redirects to movies page, where he can search for a film and add it to saved movies. User is also has a possibility to edit his profile, search films, add/delete likes. The project has a validation of forms, made with custom hook.
 
+## Live Demo
+
+https://keerzy.nomoredomains.work/
+
 ## Features
 
 – Form validation with custom hook
@@ -22,7 +26,7 @@ This is a frontend part of my diploma project. The interface layout was develope
 – React functional and class components
 
 
-## Run Locally
+## Running Locally
 
 Clone the project
 
@@ -47,9 +51,20 @@ Start project with
   npm run start
 ```
 
-## Live Demo
+## Project Dependencies
 
-https://keerzy.nomoredomains.work/
+– "react": "^18.1.0"
+    
+– "react-dom": "^18.1.0"
+    
+– "react-email-validator": "^1.0.2"
+    
+– "react-router-dom": "^6.3.0"
+    
+– "react-scripts": "5.0.1"
+    
+– "web-vitals": "^2.1.4"
+
 
 ## Additional Info
 
