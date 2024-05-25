@@ -1,5 +1,5 @@
 import './AboutMe.css';
-import photo from '../../images/student_photo.jpg';
+import photo from '../../images/student_photo.png';
 
 function AboutMe () {
 
@@ -11,7 +11,7 @@ function AboutMe () {
           <div className="about-me__text-column">
             <div className="about-me__text">
               <h3 className="about-me__name">Зикевский Кирилл</h3>
-              <h4 className="about-me__description">Фронтенд-разработчик, 32 года</h4>
+              <h4 className="about-me__description">Фронтенд-разработчик, 34 года</h4>
               <p className="about-me__intro">
                 Я живу в Москве, закончил юридический факультет РУДН.
                 Я люблю слушать музыку, в свободное время хожу в спорт-зал.
